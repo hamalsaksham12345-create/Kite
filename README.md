@@ -1,58 +1,300 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🪁 Kite - Multi-Tenant Restaurant SaaS Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive multi-tenant restaurant management platform built with Laravel 13, featuring role-based access control, dynamic theming, and a complete POS system.
 
-## About Laravel
+## 🚀 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### ✅ **Implemented**
+- **Multi-Tenant Architecture**: Complete data isolation between restaurants
+- **Role-Based Access Control**: Super Admin, Restaurant Admin, Waiter, and Chef roles
+- **Dynamic Theming**: Restaurant-specific colors and branding
+- **Super Admin Dashboard**: Complete restaurant management system
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+- **Custom Authentication**: Secure login system without external dependencies
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 🔄 **In Development**
+- Restaurant Admin CMS (menu management, settings)
+- Waiter POS System (order taking, table management)
+- Chef Kitchen Display (order status management)
+- Real-time order updates
+- Payment integration
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🏗️ Architecture
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+### Database Design
+```
+restaurants (1) ──→ (∞) users
+restaurants (1) ──→ (∞) categories
+restaurants (1) ──→ (∞) menu_items
+restaurants (1) ──→ (∞) orders
+orders (1) ──→ (∞) order_items
+categories (1) ──→ (∞) menu_items
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### User Roles
+- **Super Admin**: Manage all restaurants and create new ones
+- **Admin (Owner)**: Restaurant-specific management and settings
+- **Waiter (POS)**: Take orders and manage tables
+- **Chef (BOH)**: Kitchen display and order status management
 
-## Contributing
+### Multi-Tenancy
+- Global scopes automatically filter data by `restaurant_id`
+- Middleware ensures users only see their restaurant's data
+- Dynamic routing supports both subdomain and path-based access
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🛠️ Installation
 
-## Code of Conduct
+### Prerequisites
+- PHP 8.3+
+- Composer
+- Node.js & npm
+- MySQL/SQLite
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Quick Start
+```bash
+# Clone the repository
+git clone <repository-url> kite
+cd kite
 
-## Security Vulnerabilities
+# Run the setup script
+./start-dev.sh
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Start the development server
+php artisan serve
+```
 
-## License
+### Manual Installation
+```bash
+# Install PHP dependencies
+composer install
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Install Node.js dependencies
+npm install
+
+# Create environment file
+cp .env.example .env
+
+# Generate application key
+php artisan key:generate
+
+# Configure your database in .env file
+# DB_CONNECTION=mysql
+# DB_HOST=127.0.0.1
+# DB_PORT=3306
+# DB_DATABASE=kite
+# DB_USERNAME=your_username
+# DB_PASSWORD=your_password
+
+# Run migrations
+php artisan migrate
+
+# Seed demo data
+php artisan db:seed
+
+# Build frontend assets
+npm run build
+
+# Start the server
+php artisan serve
+```
+
+## 🔐 Demo Credentials
+
+### Super Admin
+- **Email**: `admin@kite.test`
+- **Password**: `password`
+- **Access**: Complete system management
+
+### Restaurant Admin (Demo Pizza Palace)
+- **Email**: `admin@demopizza.com`
+- **Password**: `password`
+- **Access**: Restaurant-specific management
+
+## 📱 Usage
+
+### Super Admin Dashboard
+1. Login with super admin credentials
+2. Navigate to `/super-admin/restaurants`
+3. Create, edit, or manage restaurants
+4. Assign master admin users to restaurants
+
+### Restaurant Management
+1. Login as restaurant admin
+2. Access restaurant-specific dashboard
+3. Manage menu categories and items (coming soon)
+4. Configure restaurant settings and branding (coming soon)
+
+### Dynamic Routing
+The platform supports flexible routing:
+- **Subdomain**: `{restaurant-slug}.kite.test`
+- **Path-based**: `kite.test/{restaurant-slug}`
+
+## 🎨 Theming System
+
+Each restaurant can customize:
+- **Primary Color**: Main brand color
+- **Secondary Color**: Accent color
+- **Logo**: Restaurant logo display
+- **CSS Variables**: Dynamic color injection
+
+Colors are automatically applied using CSS variables:
+```css
+:root {
+    --primary-color: #E53E3E;
+    --secondary-color: #2D3748;
+}
+```
+
+## 🗂️ Project Structure
+
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   ├── Auth/                    # Authentication controllers
+│   │   └── SuperAdmin/              # Super admin controllers
+│   └── Middleware/
+│       ├── RoleMiddleware.php       # Role-based access control
+│       └── RestaurantContextMiddleware.php  # Restaurant context
+├── Models/                          # Eloquent models
+├── Scopes/
+│   └── RestaurantScope.php         # Multi-tenancy global scope
+└── ...
+
+database/
+├── migrations/                      # Database schema
+└── seeders/                        # Demo data seeders
+
+resources/
+├── css/
+│   └── app.css                     # Tailwind CSS
+├── js/
+│   └── app.js                      # Frontend JavaScript
+└── views/
+    ├── layouts/                    # Blade layouts
+    ├── auth/                       # Authentication views
+    ├── super-admin/                # Super admin interface
+    └── ...
+```
+
+## 🔧 Development
+
+### Running Tests
+```bash
+php artisan test
+```
+
+### Code Style
+```bash
+# Format code
+./vendor/bin/pint
+
+# Check code style
+./vendor/bin/pint --test
+```
+
+### Frontend Development
+```bash
+# Watch for changes (development)
+npm run dev
+
+# Build for production
+npm run build
+```
+
+### Database Management
+```bash
+# Fresh migration with seeding
+php artisan migrate:fresh --seed
+
+# Create new migration
+php artisan make:migration create_table_name
+
+# Create new seeder
+php artisan make:seeder TableSeeder
+```
+
+## 🚀 Deployment
+
+### Production Setup
+1. Set `APP_ENV=production` in `.env`
+2. Set `APP_DEBUG=false` in `.env`
+3. Configure production database
+4. Run `composer install --optimize-autoloader --no-dev`
+5. Run `npm run build`
+6. Run `php artisan config:cache`
+7. Run `php artisan route:cache`
+8. Run `php artisan view:cache`
+
+### Environment Variables
+```env
+APP_NAME=Kite
+APP_ENV=production
+APP_KEY=base64:...
+APP_DEBUG=false
+APP_URL=https://your-domain.com
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=kite_production
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+If you encounter any issues:
+
+1. Check the [troubleshooting guide](TROUBLESHOOTING.md)
+2. Search existing [issues](../../issues)
+3. Create a new issue with detailed information
+
+## 🗺️ Roadmap
+
+### Phase 1: Foundation ✅
+- [x] Multi-tenant architecture
+- [x] User authentication and roles
+- [x] Super admin dashboard
+- [x] Dynamic theming system
+
+### Phase 2: Restaurant Management 🔄
+- [ ] Restaurant admin CMS
+- [ ] Menu management system
+- [ ] Staff user management
+- [ ] Restaurant settings
+
+### Phase 3: POS System 📋
+- [ ] Waiter interface
+- [ ] Table management
+- [ ] Order creation and management
+- [ ] Mobile-responsive design
+
+### Phase 4: Kitchen Operations 👨‍🍳
+- [ ] Kitchen display system
+- [ ] Order status management
+- [ ] Real-time updates
+- [ ] Kitchen-optimized interface
+
+### Phase 5: Advanced Features 🚀
+- [ ] Payment integration
+- [ ] Reporting and analytics
+- [ ] API endpoints
+- [ ] Mobile applications
+- [ ] Multi-language support
+
+---
+
+**Built with ❤️ using Laravel 13, Tailwind CSS, and modern web technologies.**
