@@ -37,6 +37,31 @@
 
         <!-- Form -->
         <div class="mt-12 sm:mx-auto sm:w-full sm:max-w-lg">
+            <!-- Error Messages in Red Bento Box -->
+            @if ($errors->any())
+                <div class="mb-8 p-6 bg-red-50 border-2 border-red-600 hover:shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] transition-all duration-200">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-lg font-black text-red-800">
+                                Registration Failed
+                            </h3>
+                            <div class="mt-2 text-sm">
+                                <ul class="list-disc list-inside space-y-1">
+                                    @foreach ($errors->all() as $error)
+                                        <li class="text-red-700 font-bold">{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="bg-white py-10 px-8 border-2 border-black hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                 <form method="POST" action="{{ route('register') }}" class="space-y-8">
                     @csrf
@@ -46,11 +71,8 @@
                         <label for="restaurant_name" class="block text-lg font-black text-black mb-3">Restaurant Name</label>
                         <input id="restaurant_name" name="restaurant_name" type="text" required 
                                value="{{ old('restaurant_name') }}"
-                               class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium"
+                               class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('restaurant_name') border-red-600 @enderror"
                                placeholder="Enter your restaurant name">
-                        @error('restaurant_name')
-                            <p class="mt-2 text-sm font-bold text-red-600 bg-red-50 border border-red-600 px-3 py-2 rounded">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <!-- Slug -->
@@ -60,13 +82,10 @@
                             <span class="text-gray-500 font-medium mr-2">kite.com/</span>
                             <input id="slug" name="slug" type="text" required 
                                    value="{{ old('slug') }}"
-                                   class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium"
+                                   class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('slug') border-red-600 @enderror"
                                    placeholder="your-restaurant-name">
                         </div>
                         <p class="mt-1 text-sm text-gray-600">Only letters, numbers, dashes, and underscores allowed</p>
-                        @error('slug')
-                            <p class="mt-2 text-sm font-bold text-red-600 bg-red-50 border border-red-600 px-3 py-2 rounded">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <!-- Email Address -->
@@ -74,22 +93,16 @@
                         <label for="email" class="block text-lg font-black text-black mb-3">Email Address</label>
                         <input id="email" name="email" type="email" required 
                                value="{{ old('email') }}"
-                               class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium"
+                               class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('email') border-red-600 @enderror"
                                placeholder="Enter your email">
-                        @error('email')
-                            <p class="mt-2 text-sm font-bold text-red-600 bg-red-50 border border-red-600 px-3 py-2 rounded">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <!-- Password -->
                     <div>
                         <label for="password" class="block text-lg font-black text-black mb-3">Password</label>
                         <input id="password" name="password" type="password" required 
-                               class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium"
+                               class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('password') border-red-600 @enderror"
                                placeholder="Create a password (min 8 characters)">
-                        @error('password')
-                            <p class="mt-2 text-sm font-bold text-red-600 bg-red-50 border border-red-600 px-3 py-2 rounded">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <!-- Confirm Password -->
@@ -98,21 +111,6 @@
                         <input id="password_confirmation" name="password_confirmation" type="password" required 
                                class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium"
                                placeholder="Confirm your password">
-                    </div>
-
-                    <!-- Subscription Plan -->
-                    <div>
-                        <label for="plan" class="block text-lg font-black text-black mb-3">Subscription Plan</label>
-                        <select id="plan" name="plan" required 
-                                class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium bg-white">
-                            <option value="">Select a plan</option>
-                            <option value="1 month" {{ old('plan') == '1 month' ? 'selected' : '' }}>1 Month - $29.99/month</option>
-                            <option value="6 months" {{ old('plan') == '6 months' ? 'selected' : '' }}>6 Months - $149.99 (Save 17%)</option>
-                            <option value="12 months" {{ old('plan') == '12 months' ? 'selected' : '' }}>12 Months - $299.99 (Save 17%)</option>
-                        </select>
-                        @error('plan')
-                            <p class="mt-2 text-sm font-bold text-red-600 bg-red-50 border border-red-600 px-3 py-2 rounded">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <!-- Submit Button -->
