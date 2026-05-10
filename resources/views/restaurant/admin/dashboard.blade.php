@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Dashboard - {{ auth()->user()->restaurant->name ?? 'Kite' }}</title>
+    <title>{{ auth()->user()->restaurant->name }} - Admin Dashboard</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -24,13 +24,13 @@
             <div class="flex justify-between items-center h-20">
                 <!-- Logo & Restaurant Name -->
                 <div class="flex items-center">
-                    <h1 class="text-3xl font-black text-emerald-700">{{ auth()->user()->restaurant->name ?? 'Kite' }}</h1>
+                    <h1 class="text-3xl font-black text-emerald-700">{{ auth()->user()->restaurant->name }}</h1>
                     <span class="ml-4 px-3 py-1 bg-emerald-100 border border-emerald-300 text-emerald-800 text-sm font-bold rounded">ADMIN</span>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="/dashboard" class="text-lg font-bold text-emerald-700">
+                    <a href="{{ route('restaurant.admin.dashboard') }}" class="text-lg font-bold text-emerald-700">
                         Dashboard
                     </a>
                     <a href="#" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors">
@@ -41,6 +41,9 @@
                     </a>
                     <a href="#" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors">
                         Staff
+                    </a>
+                    <a href="#" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors">
+                        Settings
                     </a>
                     
                     <!-- User Menu -->
@@ -63,7 +66,7 @@
         <!-- Header -->
         <div class="mb-12">
             <h1 class="text-6xl font-black text-black mb-4">Restaurant Dashboard</h1>
-            <p class="text-xl text-gray-600 font-medium">Welcome back, {{ auth()->user()->name }}!</p>
+            <p class="text-xl text-gray-600 font-medium">Manage your restaurant operations and settings</p>
         </div>
 
         <!-- Success/Info Messages -->
@@ -90,27 +93,25 @@
         @endif
 
         <!-- Restaurant Status -->
-        @if(auth()->user()->restaurant)
         <div class="mb-8 p-6 bg-emerald-50 border-2 border-emerald-400">
             <div class="flex items-center justify-between">
                 <div>
                     <h3 class="text-2xl font-black text-black">Restaurant Status</h3>
-                    <p class="text-emerald-700 font-medium">{{ auth()->user()->restaurant->name }} is {{ auth()->user()->restaurant->is_active ? 'active' : 'inactive' }} and {{ auth()->user()->restaurant->is_verified ? 'verified' : 'pending verification' }}</p>
-                    @if(auth()->user()->restaurant->subscription_expires_at)
+                    <p class="text-emerald-700 font-medium">{{ auth()->user()->restaurant->name }} is active and verified</p>
                     <p class="text-sm text-gray-600 mt-1">
                         Subscription: {{ ucfirst(str_replace('_', ' ', auth()->user()->restaurant->subscription_plan)) }} 
                         ({{ auth()->user()->restaurant->days_remaining }} days remaining)
                     </p>
-                    @endif
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span class="px-4 py-2 bg-{{ auth()->user()->restaurant->is_active ? 'emerald' : 'gray' }}-100 border border-{{ auth()->user()->restaurant->is_active ? 'emerald' : 'gray' }}-300 text-{{ auth()->user()->restaurant->is_active ? 'emerald' : 'gray' }}-800 font-bold rounded">
-                        {{ auth()->user()->restaurant->is_active ? 'Active' : 'Inactive' }}
-                    </span>
+                    <span class="px-4 py-2 bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold rounded">Active</span>
+                    <a href="https://{{ auth()->user()->restaurant->slug }}.kite.test" target="_blank"
+                       class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded transition-colors">
+                        View Site
+                    </a>
                 </div>
             </div>
         </div>
-        @endif
 
         <!-- Quick Stats Bento Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
@@ -152,7 +153,7 @@
                         </svg>
                     </div>
                 </div>
-                <p class="text-3xl font-black text-purple-700">{{ auth()->user()->restaurant ? auth()->user()->restaurant->users->where('is_active', true)->count() : 0 }}</p>
+                <p class="text-3xl font-black text-purple-700">{{ auth()->user()->restaurant->users->where('is_active', true)->count() }}</p>
                 <p class="text-sm font-bold text-gray-600 mt-1">Team members</p>
             </div>
 
@@ -171,52 +172,118 @@
             </div>
         </div>
 
-        <!-- Getting Started -->
-        <div class="bg-white border-2 border-black p-8">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-3xl font-black text-black">Getting Started</h2>
-                <div class="w-12 h-12 bg-emerald-100 border-2 border-black flex items-center justify-center">
-                    <svg class="w-6 h-6 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <!-- Getting Started -->
+            <div class="bg-white border-2 border-black p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-3xl font-black text-black">Getting Started</h2>
+                    <div class="w-12 h-12 bg-emerald-100 border-2 border-black flex items-center justify-center">
+                        <svg class="w-6 h-6 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center p-4 bg-gray-50 border border-gray-200 rounded">
+                        <div class="w-8 h-8 bg-emerald-100 border border-emerald-300 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-emerald-700 font-bold text-sm">1</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-black">Set up your menu</h4>
+                            <p class="text-sm text-gray-600">Add categories and menu items</p>
+                        </div>
+                        <button class="px-4 py-2 bg-emerald-400 border border-black font-bold text-black hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all text-sm">
+                            Start
+                        </button>
+                    </div>
+
+                    <div class="flex items-center p-4 bg-gray-50 border border-gray-200 rounded">
+                        <div class="w-8 h-8 bg-gray-200 border border-gray-300 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-gray-500 font-bold text-sm">2</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-gray-500">Invite your staff</h4>
+                            <p class="text-sm text-gray-400">Add waiters and kitchen staff</p>
+                        </div>
+                        <button class="px-4 py-2 bg-gray-200 border border-gray-300 font-bold text-gray-500 text-sm" disabled>
+                            Soon
+                        </button>
+                    </div>
+
+                    <div class="flex items-center p-4 bg-gray-50 border border-gray-200 rounded">
+                        <div class="w-8 h-8 bg-gray-200 border border-gray-300 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-gray-500 font-bold text-sm">3</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-gray-500">Customize branding</h4>
+                            <p class="text-sm text-gray-400">Upload logo and set colors</p>
+                        </div>
+                        <button class="px-4 py-2 bg-gray-200 border border-gray-300 font-bold text-gray-500 text-sm" disabled>
+                            Soon
+                        </button>
+                    </div>
                 </div>
             </div>
-            
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="text-center p-6 bg-gray-50 border border-gray-200 rounded">
-                    <div class="w-16 h-16 bg-emerald-100 border border-emerald-300 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-emerald-700 font-black text-xl">1</span>
-                    </div>
-                    <h4 class="font-black text-black mb-2">Set up your menu</h4>
-                    <p class="text-sm text-gray-600 mb-4">Add categories and menu items</p>
-                    <button class="px-4 py-2 bg-emerald-400 border border-black font-bold text-black hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all text-sm">
-                        Start
-                    </button>
-                </div>
 
-                <div class="text-center p-6 bg-gray-50 border border-gray-200 rounded">
-                    <div class="w-16 h-16 bg-blue-100 border border-blue-300 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-blue-700 font-black text-xl">2</span>
+            <!-- Staff Invite -->
+            <div class="bg-white border-2 border-black p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-3xl font-black text-black">Invite Staff</h2>
+                    <div class="w-12 h-12 bg-blue-100 border-2 border-black flex items-center justify-center">
+                        <svg class="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                        </svg>
                     </div>
-                    <h4 class="font-black text-black mb-2">Invite your staff</h4>
-                    <p class="text-sm text-gray-600 mb-4">Add waiters and kitchen staff</p>
-                    <button class="px-4 py-2 bg-blue-400 border border-black font-bold text-black hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all text-sm">
-                        Invite
-                    </button>
                 </div>
-
-                <div class="text-center p-6 bg-gray-50 border border-gray-200 rounded">
-                    <div class="w-16 h-16 bg-purple-100 border border-purple-300 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-purple-700 font-black text-xl">3</span>
+                
+                <div class="space-y-4">
+                    <p class="text-gray-600 font-medium">Share this link with your team members to let them join:</p>
+                    
+                    <div class="flex items-center space-x-3">
+                        <input type="text" 
+                               value="{{ route('staff.register.form', auth()->user()->restaurant) }}" 
+                               readonly
+                               class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-xl bg-gray-50 text-sm font-mono">
+                        <button onclick="copyToClipboard(this)" 
+                                class="px-4 py-3 bg-blue-400 border-2 border-black font-bold text-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">
+                            Copy
+                        </button>
                     </div>
-                    <h4 class="font-black text-black mb-2">Customize branding</h4>
-                    <p class="text-sm text-gray-600 mb-4">Upload logo and set colors</p>
-                    <button class="px-4 py-2 bg-purple-400 border border-black font-bold text-black hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all text-sm">
-                        Customize
-                    </button>
+                    
+                    <div class="grid grid-cols-2 gap-4 mt-6">
+                        <div class="text-center p-4 bg-blue-50 border border-blue-200 rounded">
+                            <h4 class="font-bold text-blue-900">Waiters</h4>
+                            <p class="text-2xl font-black text-blue-700">{{ auth()->user()->restaurant->users->where('role', 'waiter')->count() }}</p>
+                        </div>
+                        <div class="text-center p-4 bg-purple-50 border border-purple-200 rounded">
+                            <h4 class="font-bold text-purple-900">Chefs</h4>
+                            <p class="text-2xl font-black text-purple-700">{{ auth()->user()->restaurant->users->where('role', 'chef')->count() }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function copyToClipboard(button) {
+            const input = button.previousElementSibling;
+            input.select();
+            document.execCommand('copy');
+            
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            button.classList.add('bg-emerald-400');
+            button.classList.remove('bg-blue-400');
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('bg-emerald-400');
+                button.classList.add('bg-blue-400');
+            }, 2000);
+        }
+    </script>
 </body>
 </html>

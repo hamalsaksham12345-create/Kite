@@ -19,8 +19,18 @@
                     @auth
                         @if(auth()->user()->isSuperAdmin())
                             <a href="{{ route('super-admin.restaurants.index') }}" 
-                               class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('super-admin.*') ? 'border-indigo-400 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} text-sm font-medium leading-5 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                               class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('super-admin.restaurants.*') ? 'border-indigo-400 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} text-sm font-medium leading-5 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                                 Restaurants
+                            </a>
+                            <a href="{{ route('super-admin.pending.index') }}" 
+                               class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('super-admin.pending.*') ? 'border-indigo-400 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} text-sm font-medium leading-5 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                                Pending Approvals
+                                @php
+                                    $pendingCount = \App\Models\Restaurant::where('is_verified', false)->whereNotNull('subscription_plan')->count();
+                                @endphp
+                                @if($pendingCount > 0)
+                                    <span class="ml-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">{{ $pendingCount }}</span>
+                                @endif
                             </a>
                         @elseif(auth()->user()->isAdmin())
                             <a href="#" 

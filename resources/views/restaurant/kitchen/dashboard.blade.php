@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>Kitchen Display - {{ auth()->user()->restaurant->name }}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800,900&display=swap" rel="stylesheet" />
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="font-sans antialiased bg-white">
+    <!-- Navigation -->
+    <nav class="bg-white border-b-2 border-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo & Restaurant Name -->
+                <div class="flex items-center">
+                    <h1 class="text-3xl font-black text-emerald-700">{{ auth()->user()->restaurant->name }}</h1>
+                    <span class="ml-4 px-3 py-1 bg-red-100 border border-red-300 text-red-800 text-sm font-bold rounded">KITCHEN</span>
+                </div>
+
+                <!-- Status & Controls -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-emerald-500 rounded-full mr-2 animate-pulse"></div>
+                            <span class="text-sm font-bold text-emerald-700">Kitchen Online</span>
+                        </div>
+                        <button class="px-4 py-2 bg-yellow-400 border-2 border-black font-bold text-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all text-sm">
+                            Refresh Orders
+                        </button>
+                    </div>
+                    
+                    <!-- User Menu -->
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm font-medium text-gray-700">{{ auth()->user()->name }} (Chef)</span>
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit" class="text-sm font-medium text-gray-500 hover:text-black transition-colors">
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Header -->
+        <div class="mb-12">
+            <h1 class="text-6xl font-black text-black mb-4">Kitchen Display System</h1>
+            <p class="text-xl text-gray-600 font-medium">Manage incoming orders and track preparation status</p>
+        </div>
+
+        <!-- Kitchen Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <!-- Pending Orders -->
+            <div class="bg-white border-2 border-black p-6 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-black text-black">Pending</h3>
+                    <div class="w-10 h-10 bg-red-100 border-2 border-black flex items-center justify-center">
+                        <svg class="w-5 h-5 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-3xl font-black text-red-700">0</p>
+                <p class="text-sm font-bold text-gray-600 mt-1">New orders</p>
+            </div>
+
+            <!-- In Progress -->
+            <div class="bg-white border-2 border-black p-6 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-black text-black">Cooking</h3>
+                    <div class="w-10 h-10 bg-yellow-100 border-2 border-black flex items-center justify-center">
+                        <svg class="w-5 h-5 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-3xl font-black text-yellow-700">0</p>
+                <p class="text-sm font-bold text-gray-600 mt-1">In progress</p>
+            </div>
+
+            <!-- Ready -->
+            <div class="bg-white border-2 border-black p-6 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-black text-black">Ready</h3>
+                    <div class="w-10 h-10 bg-emerald-100 border-2 border-black flex items-center justify-center">
+                        <svg class="w-5 h-5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-3xl font-black text-emerald-700">0</p>
+                <p class="text-sm font-bold text-gray-600 mt-1">For pickup</p>
+            </div>
+
+            <!-- Completed Today -->
+            <div class="bg-white border-2 border-black p-6 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-black text-black">Completed</h3>
+                    <div class="w-10 h-10 bg-blue-100 border-2 border-black flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-3xl font-black text-blue-700">0</p>
+                <p class="text-sm font-bold text-gray-600 mt-1">Today</p>
+            </div>
+        </div>
+
+        <!-- Order Queue -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Pending Orders -->
+            <div class="bg-white border-2 border-black">
+                <div class="bg-red-100 border-b-2 border-black p-4">
+                    <h2 class="text-2xl font-black text-black flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Pending Orders
+                    </h2>
+                </div>
+                <div class="p-4 min-h-[400px]">
+                    <!-- Empty State -->
+                    <div class="text-center py-12 text-gray-500">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <p class="font-bold text-lg">No pending orders</p>
+                        <p class="text-sm">New orders will appear here</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- In Progress Orders -->
+            <div class="bg-white border-2 border-black">
+                <div class="bg-yellow-100 border-b-2 border-black p-4">
+                    <h2 class="text-2xl font-black text-black flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        Cooking
+                    </h2>
+                </div>
+                <div class="p-4 min-h-[400px]">
+                    <!-- Empty State -->
+                    <div class="text-center py-12 text-gray-500">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <p class="font-bold text-lg">Nothing cooking</p>
+                        <p class="text-sm">Orders in progress will show here</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ready Orders -->
+            <div class="bg-white border-2 border-black">
+                <div class="bg-emerald-100 border-b-2 border-black p-4">
+                    <h2 class="text-2xl font-black text-black flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Ready for Pickup
+                    </h2>
+                </div>
+                <div class="p-4 min-h-[400px]">
+                    <!-- Empty State -->
+                    <div class="text-center py-12 text-gray-500">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="font-bold text-lg">No orders ready</p>
+                        <p class="text-sm">Completed orders await pickup</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample Order Card (Hidden by default, shown when orders exist) -->
+        <div class="hidden mt-8">
+            <h3 class="text-2xl font-black text-black mb-4">Sample Order Format</h3>
+            <div class="bg-white border-2 border-black p-6 max-w-md">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h4 class="text-xl font-black text-black">Order #001</h4>
+                        <p class="text-sm font-bold text-gray-600">Table 5 • 2:30 PM</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="px-3 py-1 bg-red-100 border border-red-300 text-red-800 text-xs font-bold rounded">PENDING</span>
+                        <p class="text-xs text-gray-500 mt-1">5 min ago</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between">
+                        <span class="font-bold text-black">2x Margherita Pizza</span>
+                        <span class="text-sm text-gray-600">Extra cheese</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-bold text-black">1x Caesar Salad</span>
+                        <span class="text-sm text-gray-600">No croutons</span>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-2">
+                    <button class="flex-1 py-2 bg-yellow-400 border-2 border-black font-bold text-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all text-sm">
+                        Start Cooking
+                    </button>
+                    <button class="px-4 py-2 bg-gray-200 border-2 border-black font-bold text-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all text-sm">
+                        Details
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kitchen Controls -->
+        <div class="mt-12 bg-white border-2 border-black p-8">
+            <h2 class="text-3xl font-black text-black mb-6">Kitchen Controls</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Auto-refresh Toggle -->
+                <div class="p-6 bg-gray-50 border border-gray-200 rounded">
+                    <h3 class="text-lg font-bold text-black mb-3">Auto Refresh</h3>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Update orders automatically</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" checked>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Sound Alerts -->
+                <div class="p-6 bg-gray-50 border border-gray-200 rounded">
+                    <h3 class="text-lg font-bold text-black mb-3">Sound Alerts</h3>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Play sound for new orders</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" checked>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Kitchen Status -->
+                <div class="p-6 bg-gray-50 border border-gray-200 rounded">
+                    <h3 class="text-lg font-bold text-black mb-3">Kitchen Status</h3>
+                    <button class="w-full py-2 bg-emerald-400 border-2 border-black font-bold text-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">
+                        Online & Ready
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auto-refresh script -->
+    <script>
+        // Auto-refresh orders every 30 seconds
+        setInterval(function() {
+            // In a real implementation, this would fetch new orders via AJAX
+            console.log('Checking for new orders...');
+        }, 30000);
+
+        // Simulate new order notification sound
+        function playOrderSound() {
+            // In a real implementation, this would play an actual sound
+            console.log('New order received!');
+        }
+    </script>
+</body>
+</html>

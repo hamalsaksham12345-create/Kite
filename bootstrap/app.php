@@ -13,7 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'super_admin' => \App\Http\Middleware\CheckSuperAdmin::class,
             'restaurant.context' => \App\Http\Middleware\RestaurantContextMiddleware::class,
+            'restaurant.verified' => \App\Http\Middleware\EnsureRestaurantIsVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
