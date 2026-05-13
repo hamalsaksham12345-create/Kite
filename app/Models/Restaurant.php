@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\RestaurantFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,6 +13,14 @@ use Carbon\Carbon;
 class Restaurant extends Model
 {
     use HasFactory, SoftDeletes;
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): RestaurantFactory
+    {
+        return RestaurantFactory::new();
+    }
 
     protected $fillable = [
         'name',
@@ -104,5 +113,22 @@ class Restaurant extends Model
     public function getOwner()
     {
         return $this->users()->where('role', 'admin')->first();
+    }
+
+    /**
+     * Get the current restaurant from the global context
+     */
+    public static function current(): ?self
+    {
+        return config('app.current_restaurant');
+    }
+
+    /**
+     * Check if this restaurant is the current context restaurant
+     */
+    public function isCurrent(): bool
+    {
+        $current = self::current();
+        return $current && $current->id === $this->id;
     }
 }
