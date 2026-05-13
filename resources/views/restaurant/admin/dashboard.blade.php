@@ -33,7 +33,7 @@
                     <a href="{{ route('restaurant.admin.dashboard') }}" class="text-lg font-bold text-emerald-700">
                         Dashboard
                     </a>
-                    <a href="#" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors">
+                    <a href="{{ route('admin.categories.index', ['restaurant_slug' => auth()->user()->restaurant->slug]) }}" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors">
                         Menu
                     </a>
                     <a href="#" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors">
@@ -194,9 +194,10 @@
                             <h4 class="font-bold text-black">Set up your menu</h4>
                             <p class="text-sm text-gray-600">Add categories and menu items</p>
                         </div>
-                        <button class="px-4 py-2 bg-emerald-400 border border-black font-bold text-black hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all text-sm">
+                        <a href="{{ route('admin.categories.index', ['restaurant_slug' => auth()->user()->restaurant->slug]) }}" 
+                           class="px-4 py-2 bg-emerald-400 border border-black font-bold text-black hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all text-sm">
                             Start
-                        </button>
+                        </a>
                     </div>
 
                     <div class="flex items-center p-4 bg-gray-50 border border-gray-200 rounded">
