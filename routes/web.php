@@ -91,14 +91,28 @@ Route::middleware(['auth', 'super_admin'])->prefix('super-admin')->name('super-a
 });
 
 // Restaurant-specific routes (dynamic routing)
-Route::middleware(['restaurant.context', 'restaurant.verified'])->group(function () {
+Route::middleware(['restaurant.context'])->group(function () {
     // Subdomain routing: {slug}.kite.test
     Route::domain('{restaurant_slug}.kite.test')->group(function () {
         Route::get('/', function () {
-            return view('restaurant.menu');
+            $categories = \App\Models\Category::with(['menuItems' => function($query) {
+                $query->orderBy('sort_order')->orderBy('name');
+            }])
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+            
+            $menuItems = \App\Models\MenuItem::with('category')
+                ->where('is_available', true)
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get();
+            
+            return view('restaurant.menu', compact('categories', 'menuItems'));
         })->name('restaurant.menu');
         
-        Route::middleware(['auth', 'role:admin'])->group(function () {
+        Route::middleware(['auth', 'role:admin', 'restaurant.verified'])->group(function () {
             Route::get('/admin', function () {
                 return view('restaurant.admin.dashboard');
             })->name('restaurant.admin.dashboard');
@@ -116,22 +130,38 @@ Route::middleware(['restaurant.context', 'restaurant.verified'])->group(function
                 ->name('admin.menu-items.toggle-featured');
         });
         
-        Route::get('/pos', function () {
-            return view('restaurant.pos.dashboard');
-        })->middleware(['auth', 'role:waiter'])->name('restaurant.pos.dashboard');
-        
-        Route::get('/kitchen', function () {
-            return view('restaurant.kitchen.dashboard');
-        })->middleware(['auth', 'role:chef'])->name('restaurant.kitchen.dashboard');
+        Route::middleware(['auth', 'restaurant.verified'])->group(function () {
+            Route::get('/pos', function () {
+                return view('restaurant.pos.dashboard');
+            })->middleware(['role:waiter'])->name('restaurant.pos.dashboard');
+            
+            Route::get('/kitchen', function () {
+                return view('restaurant.kitchen.dashboard');
+            })->middleware(['role:chef'])->name('restaurant.kitchen.dashboard');
+        });
     });
     
     // Path-based routing: kite.test/{slug}
     Route::prefix('{restaurant_slug}')->group(function () {
         Route::get('/', function () {
-            return view('restaurant.menu');
+            $categories = \App\Models\Category::with(['menuItems' => function($query) {
+                $query->orderBy('sort_order')->orderBy('name');
+            }])
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+            
+            $menuItems = \App\Models\MenuItem::with('category')
+                ->where('is_available', true)
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get();
+            
+            return view('restaurant.menu', compact('categories', 'menuItems'));
         })->name('restaurant.menu.path');
         
-        Route::middleware(['auth', 'role:admin'])->group(function () {
+        Route::middleware(['auth', 'role:admin', 'restaurant.verified'])->group(function () {
             Route::get('/admin', function () {
                 return view('restaurant.admin.dashboard');
             })->name('restaurant.admin.dashboard.path');
@@ -149,13 +179,15 @@ Route::middleware(['restaurant.context', 'restaurant.verified'])->group(function
                 ->name('admin.path.menu-items.toggle-featured');
         });
         
-        Route::get('/pos', function () {
-            return view('restaurant.pos.dashboard');
-        })->middleware(['auth', 'role:waiter'])->name('restaurant.pos.dashboard.path');
-        
-        Route::get('/kitchen', function () {
-            return view('restaurant.kitchen.dashboard');
-        })->middleware(['auth', 'role:chef'])->name('restaurant.kitchen.dashboard.path');
+        Route::middleware(['auth', 'restaurant.verified'])->group(function () {
+            Route::get('/pos', function () {
+                return view('restaurant.pos.dashboard');
+            })->middleware(['role:waiter'])->name('restaurant.pos.dashboard.path');
+            
+            Route::get('/kitchen', function () {
+                return view('restaurant.kitchen.dashboard');
+            })->middleware(['role:chef'])->name('restaurant.kitchen.dashboard.path');
+        });
     });
 });
 
