@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\SuperAdmin\RestaurantController as SuperAdminRestaurantController;
 use App\Http\Controllers\SuperAdmin\PendingController as SuperAdminPendingController;
@@ -96,9 +98,23 @@ Route::middleware(['restaurant.context', 'restaurant.verified'])->group(function
             return view('restaurant.menu');
         })->name('restaurant.menu');
         
-        Route::get('/admin', function () {
-            return view('restaurant.admin.dashboard');
-        })->middleware(['auth', 'role:admin'])->name('restaurant.admin.dashboard');
+        Route::middleware(['auth', 'role:admin'])->group(function () {
+            Route::get('/admin', function () {
+                return view('restaurant.admin.dashboard');
+            })->name('restaurant.admin.dashboard');
+            
+            // Category Management Routes
+            Route::resource('admin/categories', CategoryController::class, ['as' => 'admin']);
+            Route::patch('admin/categories/{category}/toggle-status', [CategoryController::class, 'toggleStatus'])
+                ->name('admin.categories.toggle-status');
+            
+            // Menu Item Management Routes
+            Route::resource('admin/menu-items', MenuItemController::class, ['as' => 'admin']);
+            Route::patch('admin/menu-items/{menuItem}/toggle-availability', [MenuItemController::class, 'toggleAvailability'])
+                ->name('admin.menu-items.toggle-availability');
+            Route::patch('admin/menu-items/{menuItem}/toggle-featured', [MenuItemController::class, 'toggleFeatured'])
+                ->name('admin.menu-items.toggle-featured');
+        });
         
         Route::get('/pos', function () {
             return view('restaurant.pos.dashboard');
@@ -115,9 +131,23 @@ Route::middleware(['restaurant.context', 'restaurant.verified'])->group(function
             return view('restaurant.menu');
         })->name('restaurant.menu.path');
         
-        Route::get('/admin', function () {
-            return view('restaurant.admin.dashboard');
-        })->middleware(['auth', 'role:admin'])->name('restaurant.admin.dashboard.path');
+        Route::middleware(['auth', 'role:admin'])->group(function () {
+            Route::get('/admin', function () {
+                return view('restaurant.admin.dashboard');
+            })->name('restaurant.admin.dashboard.path');
+            
+            // Category Management Routes
+            Route::resource('admin/categories', CategoryController::class, ['as' => 'admin.path']);
+            Route::patch('admin/categories/{category}/toggle-status', [CategoryController::class, 'toggleStatus'])
+                ->name('admin.path.categories.toggle-status');
+            
+            // Menu Item Management Routes
+            Route::resource('admin/menu-items', MenuItemController::class, ['as' => 'admin.path']);
+            Route::patch('admin/menu-items/{menuItem}/toggle-availability', [MenuItemController::class, 'toggleAvailability'])
+                ->name('admin.path.menu-items.toggle-availability');
+            Route::patch('admin/menu-items/{menuItem}/toggle-featured', [MenuItemController::class, 'toggleFeatured'])
+                ->name('admin.path.menu-items.toggle-featured');
+        });
         
         Route::get('/pos', function () {
             return view('restaurant.pos.dashboard');
