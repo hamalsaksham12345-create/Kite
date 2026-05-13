@@ -24,6 +24,32 @@ Route::get('/', function () {
     return view('landing');
 })->name('home');
 
+// Authentication Routes (placed early to avoid conflicts)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [App\Http\Controllers\LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [App\Http\Controllers\LoginController::class, 'login']);
+    
+    Route::get('/register', [App\Http\Controllers\RegistrationController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [App\Http\Controllers\RegistrationController::class, 'register']);
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [App\Http\Controllers\LoginController::class, 'logout'])->name('logout');
+    
+    // Role-specific Dashboard Routes
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    
+    Route::get('/pos', function () {
+        return view('pos');
+    })->name('pos');
+    
+    Route::get('/kitchen', function () {
+        return view('kitchen');
+    })->name('kitchen');
+});
+
 // Onboarding Routes
 Route::middleware('guest')->group(function () {
     Route::get('/get-started', [OnboardingController::class, 'showRegistration'])->name('onboarding.register');
@@ -102,34 +128,6 @@ Route::middleware(['restaurant.context', 'restaurant.verified'])->group(function
         })->middleware(['auth', 'role:chef'])->name('restaurant.kitchen.dashboard.path');
     });
 });
-
-// Authentication Routes
-Route::get('/login', [App\Http\Controllers\LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [App\Http\Controllers\LoginController::class, 'login']);
-Route::post('/logout', [App\Http\Controllers\LoginController::class, 'logout'])->name('logout');
-
-// Registration Routes
-Route::get('/register', [App\Http\Controllers\RegistrationController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [App\Http\Controllers\RegistrationController::class, 'register']);
-
-// Role-specific Dashboard Routes
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-    
-    Route::get('/pos', function () {
-        return view('pos');
-    })->name('pos');
-    
-    Route::get('/kitchen', function () {
-        return view('kitchen');
-    })->name('kitchen');
-});
-
-// Registration Routes
-Route::get('/register', [App\Http\Controllers\RegistrationController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [App\Http\Controllers\RegistrationController::class, 'register']);
 
 // Staff Registration Routes
 Route::get('/join/{restaurant:slug}', [App\Http\Controllers\Auth\RegisterController::class, 'showStaffRegistration'])->name('staff.register.form');
