@@ -13,7 +13,7 @@ Route::get('/', function () {
         $user = auth()->user();
         
         if ($user->isSuperAdmin()) {
-            return redirect()->route('super-admin.restaurants.index');
+            return redirect()->route('super-admin.dashboard');
         } elseif ($user->restaurant && $user->restaurant->is_verified) {
             return redirect()->route('restaurant.admin.dashboard');
         } elseif ($user->restaurant && !$user->restaurant->is_verified) {
