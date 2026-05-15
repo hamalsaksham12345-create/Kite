@@ -58,6 +58,9 @@ class RestaurantContextMiddleware
             // Share restaurant data with all views for logo, colors, etc.
             view()->share('currentRestaurant', $restaurant);
             
+            // Set CSS variables for restaurant branding
+            view()->share('restaurantBrandingCSS', $this->generateBrandingCSS($restaurant));
+            
             // Store in request for controller access
             $request->merge(['current_restaurant' => $restaurant]);
             
@@ -66,5 +69,32 @@ class RestaurantContextMiddleware
         }
 
         return $next($request);
+    }
+
+    /**
+     * Generate CSS variables for restaurant branding
+     */
+    private function generateBrandingCSS(Restaurant $restaurant): string
+    {
+        $primaryColor = $restaurant->primary_color ?? '#10b981';
+        $secondaryColor = $restaurant->secondary_color ?? '#065f46';
+        
+        return "
+            <style>
+                :root {
+                    --brand-primary: {$primaryColor};
+                    --brand-secondary: {$secondaryColor};
+                    --restaurant-primary: {$primaryColor};
+                    --restaurant-secondary: {$secondaryColor};
+                }
+                
+                .brand-primary { background-color: var(--brand-primary); }
+                .brand-secondary { background-color: var(--brand-secondary); }
+                .text-brand-primary { color: var(--brand-primary); }
+                .text-brand-secondary { color: var(--brand-secondary); }
+                .border-brand-primary { border-color: var(--brand-primary); }
+                .border-brand-secondary { border-color: var(--brand-secondary); }
+            </style>
+        ";
     }
 }
