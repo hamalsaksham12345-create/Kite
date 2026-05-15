@@ -11,12 +11,6 @@ use Carbon\Carbon;
 
 class SuperAdminController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('super_admin');
-    }
-
     public function index()
     {
         // Dashboard stats
