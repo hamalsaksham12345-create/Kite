@@ -141,7 +141,7 @@
                                     <p class="text-xs text-gray-500">{{ $restaurant->created_at->diffForHumans() }}</p>
                                 </div>
                                 <div class="flex space-x-2">
-                                    <form method="POST" action="{{ route('super-admin.approve', $restaurant) }}" class="inline">
+                                    <form method="POST" action="{{ route('super-admin.pending.approve', $restaurant) }}" class="inline">
                                         @csrf
                                         @method('PATCH')
                                         <button type="submit" class="px-3 py-1 bg-emerald-400 border border-black text-xs font-bold text-black hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all">
