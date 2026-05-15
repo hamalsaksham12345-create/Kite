@@ -34,7 +34,7 @@
             </div>
         </nav>
 
-        <div class="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             @if($categories->count() == 0)
                 <div class="bg-yellow-50 border-2 border-yellow-600 p-6 mb-6">
                     <div class="flex items-center">
@@ -56,198 +56,219 @@
                     </div>
                 </div>
             @else
-                <div class="bg-white border-2 border-black hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
-                    <div class="p-8">
-                        <form action="{{ route('admin.menu-items.store', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
-                              method="POST" 
-                              enctype="multipart/form-data" 
-                              class="space-y-6">
-                            @csrf
+                <!-- Two Column Layout: Form + Live Preview -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Form Column -->
+                    <div class="bg-white border-4 border-black hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                        <div class="p-8">
+                            <h2 class="text-2xl font-black text-black mb-6">Add New Menu Item</h2>
+                            <form action="{{ route('admin.menu-items.store', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                                  method="POST" 
+                                  enctype="multipart/form-data" 
+                                  class="space-y-6"
+                                  x-data="menuItemForm()"
+                                  x-init="init()">
+                                @csrf
 
-                            <!-- Category Selection -->
-                            <div>
-                                <label for="category_id" class="block text-lg font-black text-black mb-3">Category</label>
-                                <select id="category_id" 
-                                        name="category_id" 
-                                        required
-                                        class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('category_id') border-red-600 @enderror">
-                                    <option value="">Select a category...</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                            {{ $category->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('category_id')
-                                    <p class="mt-2 text-sm font-bold text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Item Name -->
-                            <div>
-                                <label for="name" class="block text-lg font-black text-black mb-3">Item Name</label>
-                                <input id="name" 
-                                       name="name" 
-                                       type="text" 
-                                       required 
-                                       value="{{ old('name') }}"
-                                       class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('name') border-red-600 @enderror"
-                                       placeholder="e.g., Margherita Pizza, Caesar Salad">
-                                @error('name')
-                                    <p class="mt-2 text-sm font-bold text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Description -->
-                            <div>
-                                <label for="description" class="block text-lg font-black text-black mb-3">Description (Optional)</label>
-                                <textarea id="description" 
-                                          name="description" 
-                                          rows="3"
-                                          class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('description') border-red-600 @enderror"
-                                          placeholder="Describe the dish, ingredients, or preparation...">{{ old('description') }}</textarea>
-                                @error('description')
-                                    <p class="mt-2 text-sm font-bold text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Price -->
-                            <div>
-                                <label for="price" class="block text-lg font-black text-black mb-3">Price ($)</label>
-                                <input id="price" 
-                                       name="price" 
-                                       type="number" 
-                                       step="0.01"
-                                       min="0"
-                                       max="999999.99"
-                                       required 
-                                       value="{{ old('price') }}"
-                                       class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('price') border-red-600 @enderror"
-                                       placeholder="0.00">
-                                @error('price')
-                                    <p class="mt-2 text-sm font-bold text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Item Image -->
-                            <div>
-                                <label for="image" class="block text-lg font-black text-black mb-3">Item Image (Optional)</label>
-                                <input id="image" 
-                                       name="image" 
-                                       type="file" 
-                                       accept="image/*"
-                                       class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('image') border-red-600 @enderror">
-                                <p class="mt-1 text-sm text-gray-600">Maximum file size: 5MB. Supported formats: JPEG, PNG, JPG, GIF</p>
-                                @error('image')
-                                    <p class="mt-2 text-sm font-bold text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Ingredients -->
-                            <div>
-                                <label for="ingredients" class="block text-lg font-black text-black mb-3">Ingredients (Optional)</label>
-                                <input id="ingredients" 
-                                       name="ingredients" 
-                                       type="text" 
-                                       value="{{ old('ingredients') }}"
-                                       class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('ingredients') border-red-600 @enderror"
-                                       placeholder="tomato, mozzarella, basil, olive oil">
-                                <p class="mt-1 text-sm text-gray-600">Separate ingredients with commas</p>
-                                @error('ingredients')
-                                    <p class="mt-2 text-sm font-bold text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Allergens -->
-                            <div>
-                                <label for="allergens" class="block text-lg font-black text-black mb-3">Allergens (Optional)</label>
-                                <input id="allergens" 
-                                       name="allergens" 
-                                       type="text" 
-                                       value="{{ old('allergens') }}"
-                                       class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('allergens') border-red-600 @enderror"
-                                       placeholder="gluten, dairy, nuts">
-                                <p class="mt-1 text-sm text-gray-600">Separate allergens with commas</p>
-                                @error('allergens')
-                                    <p class="mt-2 text-sm font-bold text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Preparation Time -->
-                            <div>
-                                <label for="preparation_time" class="block text-lg font-black text-black mb-3">Preparation Time (minutes, optional)</label>
-                                <input id="preparation_time" 
-                                       name="preparation_time" 
-                                       type="number" 
-                                       min="1"
-                                       max="300"
-                                       value="{{ old('preparation_time') }}"
-                                       class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('preparation_time') border-red-600 @enderror"
-                                       placeholder="15">
-                                @error('preparation_time')
-                                    <p class="mt-2 text-sm font-bold text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Sort Order -->
-                            <div>
-                                <label for="sort_order" class="block text-lg font-black text-black mb-3">Sort Order (Optional)</label>
-                                <input id="sort_order" 
-                                       name="sort_order" 
-                                       type="number" 
-                                       min="0"
-                                       value="{{ old('sort_order') }}"
-                                       class="appearance-none block w-full px-4 py-4 border-2 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('sort_order') border-red-600 @enderror"
-                                       placeholder="0">
-                                <p class="mt-1 text-sm text-gray-600">Lower numbers appear first. Leave blank to add at the end.</p>
-                                @error('sort_order')
-                                    <p class="mt-2 text-sm font-bold text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Status Checkboxes -->
-                            <div class="space-y-4">
-                                <div class="flex items-center">
-                                    <input id="is_available" 
-                                           name="is_available" 
-                                           type="checkbox" 
-                                           value="1"
-                                           {{ old('is_available', true) ? 'checked' : '' }}
-                                           class="h-5 w-5 text-emerald-600 focus:ring-emerald-500 border-2 border-black">
-                                    <label for="is_available" class="ml-3 block text-lg font-bold text-black">
-                                        Available for ordering
-                                    </label>
+                                <!-- Category Selection -->
+                                <div>
+                                    <label for="category_id" class="block text-lg font-black text-black mb-3">Category</label>
+                                    <select id="category_id" 
+                                            name="category_id" 
+                                            required
+                                            x-model="formData.category_id"
+                                            class="appearance-none block w-full px-4 py-4 border-4 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('category_id') border-red-600 @enderror">
+                                        <option value="">Select a category...</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('category_id')
+                                        <p class="mt-2 text-sm font-bold text-red-600">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
-                                <div class="flex items-center">
-                                    <input id="is_featured" 
-                                           name="is_featured" 
-                                           type="checkbox" 
-                                           value="1"
-                                           {{ old('is_featured') ? 'checked' : '' }}
-                                           class="h-5 w-5 text-emerald-600 focus:ring-emerald-500 border-2 border-black">
-                                    <label for="is_featured" class="ml-3 block text-lg font-bold text-black">
-                                        Featured item (highlight on menu)
-                                    </label>
+                                <!-- Item Name -->
+                                <div>
+                                    <label for="name" class="block text-lg font-black text-black mb-3">Item Name</label>
+                                    <input id="name" 
+                                           name="name" 
+                                           type="text" 
+                                           required 
+                                           x-model="formData.name"
+                                           value="{{ old('name') }}"
+                                           class="appearance-none block w-full px-4 py-4 border-4 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('name') border-red-600 @enderror"
+                                           placeholder="e.g., Margherita Pizza, Caesar Salad">
+                                    @error('name')
+                                        <p class="mt-2 text-sm font-bold text-red-600">{{ $message }}</p>
+                                    @enderror
                                 </div>
-                            </div>
 
-                            <!-- Submit Buttons -->
-                            <div class="flex gap-4 pt-6">
-                                <button type="submit" 
-                                        class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 px-6 border-2 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
-                                    Create Menu Item
-                                </button>
-                                <a href="{{ route('admin.menu-items.index', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
-                                   class="flex-1 bg-gray-200 hover:bg-gray-300 text-black font-black py-4 px-6 border-2 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 text-center">
-                                    Cancel
-                                </a>
-                            </div>
-                        </form>
+                                <!-- Description -->
+                                <div>
+                                    <label for="description" class="block text-lg font-black text-black mb-3">Description</label>
+                                    <textarea id="description" 
+                                              name="description" 
+                                              rows="3"
+                                              x-model="formData.description"
+                                              class="appearance-none block w-full px-4 py-4 border-4 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('description') border-red-600 @enderror"
+                                              placeholder="Describe the dish, ingredients, or preparation...">{{ old('description') }}</textarea>
+                                    @error('description')
+                                        <p class="mt-2 text-sm font-bold text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <!-- Price -->
+                                <div>
+                                    <label for="price" class="block text-lg font-black text-black mb-3">Price ($)</label>
+                                    <input id="price" 
+                                           name="price" 
+                                           type="number" 
+                                           step="0.01"
+                                           min="0"
+                                           max="999999.99"
+                                           required 
+                                           x-model="formData.price"
+                                           value="{{ old('price') }}"
+                                           class="appearance-none block w-full px-4 py-4 border-4 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('price') border-red-600 @enderror"
+                                           placeholder="0.00">
+                                    @error('price')
+                                        <p class="mt-2 text-sm font-bold text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <!-- Item Image -->
+                                <div>
+                                    <label for="image" class="block text-lg font-black text-black mb-3">Item Image</label>
+                                    <input id="image" 
+                                           name="image" 
+                                           type="file" 
+                                           accept="image/*"
+                                           @change="handleImageUpload($event)"
+                                           class="appearance-none block w-full px-4 py-4 border-4 border-black focus:outline-none focus:border-emerald-600 text-lg font-medium @error('image') border-red-600 @enderror">
+                                    <p class="mt-1 text-sm text-gray-600">Maximum file size: 2MB. Supported formats: JPEG, PNG, JPG, GIF</p>
+                                    @error('image')
+                                        <p class="mt-2 text-sm font-bold text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="pt-6">
+                                    <button type="submit" 
+                                            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 px-6 border-4 border-black hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 text-xl">
+                                        CREATE MENU ITEM
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+
+                    <!-- Live Preview Column -->
+                    <div class="bg-white border-4 border-black hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                        <div class="p-8">
+                            <h2 class="text-2xl font-black text-black mb-6">Live Preview</h2>
+                            <p class="text-gray-600 mb-6">See how your menu item will appear to customers</p>
+                            
+                            <!-- Preview Card -->
+                            <div class="bg-gray-50 rounded-2xl shadow-sm border-2 border-gray-200 overflow-hidden" x-data="menuItemForm()">
+                                <!-- Preview Image -->
+                                <div class="relative h-48 bg-gray-200">
+                                    <div x-show="!previewImage" class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-300 to-gray-400">
+                                        <span class="text-4xl font-black text-white" x-text="formData.name ? formData.name.charAt(0).toUpperCase() : '?'"></span>
+                                    </div>
+                                    <img x-show="previewImage" 
+                                         :src="previewImage" 
+                                         alt="Preview" 
+                                         class="w-full h-full object-cover">
+                                </div>
+
+                                <!-- Preview Details -->
+                                <div class="p-4">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h3 class="text-lg font-black text-gray-900" x-text="formData.name || 'Menu Item Name'"></h3>
+                                        <span class="text-lg font-black text-emerald-600" x-text="formData.price ? '$' + parseFloat(formData.price).toFixed(2) : '$0.00'"></span>
+                                    </div>
+                                    
+                                    <p class="text-sm text-gray-600 mb-3" x-text="formData.description || 'Item description will appear here...'"></p>
+                                    
+                                    <!-- Preview Add to Cart Button -->
+                                    <button class="w-full bg-emerald-600 text-white py-3 px-6 rounded-xl font-bold hover:opacity-90 transition-all duration-200 transform hover:scale-105">
+                                        Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Preview Tips -->
+                            <div class="mt-6 p-4 bg-blue-50 border-2 border-blue-200 rounded-lg">
+                                <h4 class="font-black text-blue-900 mb-2">Preview Tips:</h4>
+                                <ul class="text-sm text-blue-800 space-y-1">
+                                    <li>• Fill out the form to see live updates</li>
+                                    <li>• Upload an image to see how it looks</li>
+                                    <li>• This is exactly how customers will see it</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Back Button -->
+                <div class="mt-8 text-center">
+                    <a href="{{ route('admin.menu-items.index', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                       class="bg-gray-200 hover:bg-gray-300 text-black font-black py-3 px-6 border-4 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                        ← Back to Menu Items
+                    </a>
                 </div>
             @endif
         </div>
     </div>
+
+    <!-- Alpine.js Script for Live Preview -->
+    <script>
+        function menuItemForm() {
+            return {
+                formData: {
+                    name: '',
+                    description: '',
+                    price: '',
+                    category_id: ''
+                },
+                previewImage: null,
+                
+                init() {
+                    // Watch for form changes
+                    this.$watch('formData', () => {
+                        // Update preview in real-time
+                    });
+                },
+                
+                handleImageUpload(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        // Check file size (2MB = 2 * 1024 * 1024 bytes)
+                        if (file.size > 2 * 1024 * 1024) {
+                            alert('Image must be less than 2MB');
+                            event.target.value = '';
+                            this.previewImage = null;
+                            return;
+                        }
+                        
+                        // Create preview
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.previewImage = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        this.previewImage = null;
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 </html>
