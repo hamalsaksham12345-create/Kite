@@ -57,7 +57,7 @@ class MenuItemController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
             'price' => 'required|numeric|min:0|max:999999.99',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max
             'ingredients' => 'nullable|string|max:1000',
             'allergens' => 'nullable|string|max:500',
             'preparation_time' => 'nullable|integer|min:1|max:300', // Max 5 hours
@@ -128,7 +128,7 @@ class MenuItemController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
             'price' => 'required|numeric|min:0|max:999999.99',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max
             'ingredients' => 'nullable|string|max:1000',
             'allergens' => 'nullable|string|max:500',
             'preparation_time' => 'nullable|integer|min:1|max:300', // Max 5 hours
