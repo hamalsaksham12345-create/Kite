@@ -18,15 +18,11 @@
     @if(isset($currentRestaurant))
     <style>
         :root {
-            --primary-color: {{ $currentRestaurant->primary_color }};
-            --secondary-color: {{ $currentRestaurant->secondary_color }};
+            --brand-primary: {{ $currentRestaurant->primary_color ?? '#10b981' }};
+            --brand-secondary: {{ $currentRestaurant->secondary_color ?? '#065f46' }};
         }
-        .bg-primary { background-color: var(--primary-color) !important; }
-        .text-primary { color: var(--primary-color) !important; }
-        .border-primary { border-color: var(--primary-color) !important; }
-        .bg-secondary { background-color: var(--secondary-color) !important; }
-        .text-secondary { color: var(--secondary-color) !important; }
     </style>
+    {!! $restaurantBrandingCSS ?? '' !!}
     @endif
 </head>
 <body class="font-sans antialiased">
