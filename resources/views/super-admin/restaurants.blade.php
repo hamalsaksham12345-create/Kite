@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>All Restaurants - Super Admin - Kite</title>
+    <title>Restaurants Management - Kite Super Admin</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -24,21 +24,19 @@
             <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="{{ route('super-admin.dashboard') }}">
-                        <h1 class="text-3xl font-black text-emerald-700">Kite</h1>
-                    </a>
+                    <h1 class="text-3xl font-black text-emerald-700">Kite</h1>
                     <span class="ml-4 px-3 py-1 bg-black text-white text-sm font-bold rounded">SUPER ADMIN</span>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="{{ route('super-admin.dashboard') }}" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors">
+                    <a href="{{ route('super-admin.dashboard') }}" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors {{ request()->routeIs('super-admin.dashboard') ? 'text-emerald-700' : '' }}">
                         Dashboard
                     </a>
-                    <a href="{{ route('super-admin.pending-queue') }}" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors">
+                    <a href="{{ route('super-admin.pending-queue') }}" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors {{ request()->routeIs('super-admin.pending-queue') ? 'text-emerald-700' : '' }}">
                         Pending Queue
                     </a>
-                    <a href="{{ route('super-admin.restaurants') }}" class="text-lg font-bold text-emerald-700">
+                    <a href="{{ route('super-admin.restaurants') }}" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors {{ request()->routeIs('super-admin.restaurants') ? 'text-emerald-700' : '' }}">
                         All Restaurants
                     </a>
                     
@@ -61,8 +59,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- Header -->
         <div class="mb-12">
-            <h1 class="text-6xl font-black text-black mb-4">All Restaurants</h1>
-            <p class="text-xl text-gray-600 font-medium">Manage active restaurants and their subscriptions</p>
+            <h1 class="text-6xl font-black text-black mb-4">Restaurants Management</h1>
+            <p class="text-xl text-gray-600 font-medium">Monitor and manage all active and suspended restaurants</p>
         </div>
 
         <!-- Success Message -->
@@ -77,161 +75,126 @@
             </div>
         @endif
 
-        <!-- Stats -->
-        <div class="mb-8 p-6 bg-emerald-50 border-2 border-emerald-400">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h3 class="text-2xl font-black text-black">{{ $restaurants->total() }} Active Restaurants</h3>
-                    <p class="text-gray-600 font-medium">Verified and managing their operations</p>
-                </div>
-                <div class="w-16 h-16 bg-emerald-400 border-2 border-black flex items-center justify-center">
-                    <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                    </svg>
-                </div>
+        <!-- Metrics Bento Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <!-- Total Registered Platforms -->
+            <div class="bg-white border-4 border-black p-8 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                <h3 class="text-sm font-black text-black mb-4 uppercase tracking-wide">Total Registered</h3>
+                <p class="text-6xl font-black text-black mb-2">{{ $restaurants->total() }}</p>
+                <p class="text-sm font-bold text-gray-600">Platforms</p>
+            </div>
+
+            <!-- Active Subscriptions -->
+            <div class="bg-white border-4 border-black p-8 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                <h3 class="text-sm font-black text-black mb-4 uppercase tracking-wide">Active Subscriptions</h3>
+                <p class="text-6xl font-black text-emerald-600 mb-2">{{ $restaurants->where('is_active', true)->count() }}</p>
+                <p class="text-sm font-bold text-gray-600">Running</p>
+            </div>
+
+            <!-- Suspended Accounts -->
+            <div class="bg-white border-4 border-black p-8 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                <h3 class="text-sm font-black text-black mb-4 uppercase tracking-wide">Suspended Accounts</h3>
+                <p class="text-6xl font-black text-red-600 mb-2">{{ $restaurants->where('is_active', false)->count() }}</p>
+                <p class="text-sm font-bold text-gray-600">Inactive</p>
             </div>
         </div>
 
         <!-- Restaurants Table -->
-        @if($restaurants->count() > 0)
-            <div class="bg-white border-2 border-black overflow-hidden">
-                <!-- Table Header -->
-                <div class="bg-gray-100 border-b-2 border-black p-6">
-                    <h2 class="text-3xl font-black text-black">Active Restaurants</h2>
-                </div>
+        <div class="bg-white border-4 border-black overflow-hidden">
+            <!-- Table Header -->
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b-4 border-black bg-gray-100">
+                            <th class="px-6 py-4 text-left text-sm font-black text-black uppercase tracking-wide">Logo</th>
+                            <th class="px-6 py-4 text-left text-sm font-black text-black uppercase tracking-wide">Restaurant Name</th>
+                            <th class="px-6 py-4 text-left text-sm font-black text-black uppercase tracking-wide">Status</th>
+                            <th class="px-6 py-4 text-left text-sm font-black text-black uppercase tracking-wide">Subscription Expires</th>
+                            <th class="px-6 py-4 text-left text-sm font-black text-black uppercase tracking-wide">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($restaurants as $restaurant)
+                            <tr class="border-b-2 border-gray-300 hover:bg-gray-50 transition-colors">
+                                <!-- Logo Placeholder -->
+                                <td class="px-6 py-4">
+                                    <div class="w-12 h-12 bg-gray-200 border-2 border-black flex items-center justify-center">
+                                        <span class="text-xs font-black text-gray-600">LOGO</span>
+                                    </div>
+                                </td>
 
-                <!-- Table Content -->
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-gray-50 border-b-2 border-black">
-                            <tr>
-                                <th class="px-6 py-4 text-left text-lg font-black text-black border-r border-gray-300">Restaurant</th>
-                                <th class="px-6 py-4 text-left text-lg font-black text-black border-r border-gray-300">Owner</th>
-                                <th class="px-6 py-4 text-left text-lg font-black text-black border-r border-gray-300">Plan</th>
-                                <th class="px-6 py-4 text-left text-lg font-black text-black border-r border-gray-300">Days Remaining</th>
-                                <th class="px-6 py-4 text-left text-lg font-black text-black border-r border-gray-300">Status</th>
-                                <th class="px-6 py-4 text-left text-lg font-black text-black">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y-2 divide-gray-200">
-                            @foreach($restaurants as $restaurant)
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-6 border-r border-gray-200">
-                                        <div>
-                                            <h4 class="text-lg font-bold text-black">{{ $restaurant->name }}</h4>
-                                            <p class="text-sm text-gray-600 font-medium">{{ $restaurant->slug }}</p>
-                                            @if($restaurant->phone)
-                                                <p class="text-xs text-gray-500 mt-1">{{ $restaurant->phone }}</p>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-6 border-r border-gray-200">
-                                        @php $owner = $restaurant->getOwner(); @endphp
-                                        @if($owner)
-                                            <div>
-                                                <p class="text-lg font-bold text-black">{{ $owner->name }}</p>
-                                                <p class="text-sm text-gray-600 font-medium">{{ $owner->email }}</p>
-                                            </div>
-                                        @else
-                                            <span class="text-red-500 font-bold">No Owner</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-6 border-r border-gray-200">
-                                        <div>
-                                            <span class="px-3 py-1 bg-blue-100 border border-blue-300 text-sm font-bold text-blue-800 rounded">
-                                                {{ ucfirst(str_replace('_', ' ', $restaurant->subscription_plan)) }}
-                                            </span>
-                                            @if($restaurant->subscription_amount)
-                                                <p class="text-sm text-gray-600 font-bold mt-1">${{ number_format($restaurant->subscription_amount, 2) }}</p>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-6 border-r border-gray-200">
-                                        <div>
-                                            @php $daysRemaining = $restaurant->days_remaining; @endphp
-                                            <p class="text-lg font-bold {{ $daysRemaining <= 7 ? 'text-red-600' : ($daysRemaining <= 30 ? 'text-yellow-600' : 'text-emerald-600') }}">
-                                                {{ $daysRemaining }} days
-                                            </p>
-                                            @if($restaurant->subscription_expires_at)
-                                                <p class="text-xs text-gray-500">Expires {{ $restaurant->subscription_expires_at->format('M d, Y') }}</p>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-6 border-r border-gray-200">
-                                        <div class="flex flex-col space-y-2">
-                                            @if($restaurant->is_active)
-                                                <span class="px-3 py-1 bg-emerald-100 border border-emerald-300 text-sm font-bold text-emerald-800 rounded text-center">
-                                                    Active
-                                                </span>
-                                            @else
-                                                <span class="px-3 py-1 bg-red-100 border border-red-300 text-sm font-bold text-red-800 rounded text-center">
-                                                    Suspended
-                                                </span>
-                                            @endif
-                                            
-                                            @if($restaurant->isSubscriptionExpired())
-                                                <span class="px-3 py-1 bg-yellow-100 border border-yellow-300 text-xs font-bold text-yellow-800 rounded text-center">
+                                <!-- Restaurant Name -->
+                                <td class="px-6 py-4">
+                                    <div>
+                                        <p class="text-lg font-black text-black">{{ $restaurant->name }}</p>
+                                        <p class="text-sm font-medium text-gray-600">{{ $restaurant->slug }}</p>
+                                    </div>
+                                </td>
+
+                                <!-- Status Badge -->
+                                <td class="px-6 py-4">
+                                    @if($restaurant->is_active)
+                                        <span class="inline-block px-4 py-2 bg-emerald-100 border-2 border-emerald-600 text-emerald-800 font-black text-sm uppercase">Active</span>
+                                    @else
+                                        <span class="inline-block px-4 py-2 bg-red-100 border-2 border-red-600 text-red-800 font-black text-sm uppercase">Suspended</span>
+                                    @endif
+                                </td>
+
+                                <!-- Subscription Expiration Date -->
+                                <td class="px-6 py-4">
+                                    <div>
+                                        @if($restaurant->subscription_expires_at)
+                                            <p class="text-base font-bold text-black">{{ $restaurant->subscription_expires_at->format('M d, Y') }}</p>
+                                            <p class="text-xs font-medium text-gray-600">
+                                                @if($restaurant->subscription_expires_at->isFuture())
+                                                    {{ $restaurant->subscription_expires_at->diffForHumans() }}
+                                                @else
                                                     Expired
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-6">
-                                        <div class="flex flex-col space-y-2">
-                                            @if($restaurant->is_active)
-                                                <!-- Suspend Button -->
-                                                <form method="POST" action="{{ route('super-admin.suspend', $restaurant) }}" class="inline">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" 
-                                                            onclick="return confirm('Are you sure you want to suspend {{ $restaurant->name }}?')"
-                                                            class="w-full px-3 py-2 bg-red-400 border-2 border-black font-bold text-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all text-sm">
-                                                        Suspend
-                                                    </button>
-                                                </form>
-                                            @else
-                                                <!-- Reactivate Button -->
-                                                <form method="POST" action="{{ route('super-admin.reactivate', $restaurant) }}" class="inline">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" 
-                                                            onclick="return confirm('Are you sure you want to reactivate {{ $restaurant->name }}?')"
-                                                            class="w-full px-3 py-2 bg-emerald-400 border-2 border-black font-bold text-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all text-sm">
-                                                        Reactivate
-                                                    </button>
-                                                </form>
-                                            @endif
+                                                @endif
+                                            </p>
+                                        @else
+                                            <p class="text-base font-bold text-gray-500">N/A</p>
+                                        @endif
+                                    </div>
+                                </td>
 
-                                            <!-- View Details Button -->
-                                            <a href="https://{{ $restaurant->slug }}.kite.test" target="_blank" 
-                                               class="w-full px-3 py-2 bg-blue-400 border-2 border-black font-bold text-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all text-sm text-center">
-                                                View Site
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Pagination -->
-                @if($restaurants->hasPages())
-                    <div class="border-t-2 border-black p-6">
-                        {{ $restaurants->links() }}
-                    </div>
-                @endif
+                                <!-- Actions -->
+                                <td class="px-6 py-4">
+                                    @if($restaurant->is_active)
+                                        <form method="POST" action="{{ route('super-admin.suspend', $restaurant) }}" class="inline" onsubmit="return confirm('Are you sure you want to suspend this restaurant?');">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="px-4 py-2 bg-red-600 border-2 border-black text-white font-black text-sm uppercase hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all duration-200">
+                                                Suspend
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form method="POST" action="{{ route('super-admin.reactivate', $restaurant) }}" class="inline" onsubmit="return confirm('Are you sure you want to reactivate this restaurant?');">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="px-4 py-2 bg-emerald-600 border-2 border-black text-white font-black text-sm uppercase hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all duration-200">
+                                                Reactivate
+                                            </button>
+                                        </form>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="px-6 py-12 text-center">
+                                    <p class="text-lg font-bold text-gray-600">No restaurants found</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-        @else
-            <!-- Empty State -->
-            <div class="bg-white border-2 border-black p-12 text-center">
-                <div class="w-24 h-24 bg-gray-100 border-2 border-black mx-auto mb-6 flex items-center justify-center">
-                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                    </svg>
-                </div>
-                <h3 class="text-3xl font-black text-black mb-4">No Active Restaurants</h3>
-                <p class="text-xl text-gray-600 font-medium">No restaurants have been approved yet.</p>
+        </div>
+
+        <!-- Pagination -->
+        @if($restaurants->hasPages())
+            <div class="mt-12">
+                {{ $restaurants->links() }}
             </div>
         @endif
     </div>
