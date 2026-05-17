@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Pending Queue - Super Admin - Kite</title>
+    <title>Pending Queue - Kite Super Admin</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -24,21 +24,19 @@
             <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="{{ route('super-admin.dashboard') }}">
-                        <h1 class="text-3xl font-black text-emerald-700">Kite</h1>
-                    </a>
+                    <h1 class="text-3xl font-black text-emerald-700">Kite</h1>
                     <span class="ml-4 px-3 py-1 bg-black text-white text-sm font-bold rounded">SUPER ADMIN</span>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="{{ route('super-admin.dashboard') }}" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors">
+                    <a href="{{ route('super-admin.dashboard') }}" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors {{ request()->routeIs('super-admin.dashboard') ? 'text-emerald-700' : '' }}">
                         Dashboard
                     </a>
-                    <a href="{{ route('super-admin.pending-queue') }}" class="text-lg font-bold text-emerald-700">
+                    <a href="{{ route('super-admin.pending-queue') }}" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors {{ request()->routeIs('super-admin.pending-queue') ? 'text-emerald-700' : '' }}">
                         Pending Queue
                     </a>
-                    <a href="{{ route('super-admin.restaurants') }}" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors">
+                    <a href="{{ route('super-admin.restaurants') }}" class="text-lg font-bold text-black hover:text-emerald-700 transition-colors {{ request()->routeIs('super-admin.restaurants') ? 'text-emerald-700' : '' }}">
                         All Restaurants
                     </a>
                     
@@ -61,8 +59,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- Header -->
         <div class="mb-12">
-            <h1 class="text-6xl font-black text-black mb-4">Verification Queue</h1>
-            <p class="text-xl text-gray-600 font-medium">Review and approve pending restaurant applications</p>
+            <h1 class="text-6xl font-black text-black mb-4">Pending Queue</h1>
+            <p class="text-xl text-gray-600 font-medium">Review and approve restaurant applications</p>
         </div>
 
         <!-- Success Message -->
@@ -77,166 +75,110 @@
             </div>
         @endif
 
-        <!-- Stats -->
-        <div class="mb-8 p-6 bg-yellow-50 border-2 border-yellow-400">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h3 class="text-2xl font-black text-black">{{ $pendingRestaurants->total() }} Pending Applications</h3>
-                    <p class="text-gray-600 font-medium">Awaiting your review and approval</p>
-                </div>
-                <div class="w-16 h-16 bg-yellow-400 border-2 border-black flex items-center justify-center">
-                    <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <!-- Error Message -->
+        @if(session('error'))
+            <div class="mb-8 p-6 bg-red-50 border-2 border-red-500 rounded-lg">
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-red-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
                     </svg>
+                    <p class="text-red-800 font-bold">{{ session('error') }}</p>
                 </div>
             </div>
-        </div>
+        @endif
 
-        <!-- Pending Restaurants Table -->
+        <!-- Pending Restaurants -->
         @if($pendingRestaurants->count() > 0)
-            <div class="bg-white border-2 border-black overflow-hidden">
-                <!-- Table Header -->
-                <div class="bg-gray-100 border-b-2 border-black p-6">
-                    <h2 class="text-3xl font-black text-black">Pending Applications</h2>
-                </div>
+            <div class="space-y-6">
+                @foreach($pendingRestaurants as $restaurant)
+                    <div class="bg-white border-4 border-black p-8 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                        <!-- Restaurant Header -->
+                        <div class="mb-6">
+                            <h2 class="text-4xl font-black text-black mb-2">{{ $restaurant->name }}</h2>
+                            <p class="text-lg font-bold text-gray-700">{{ $restaurant->slug }}</p>
+                        </div>
 
-                <!-- Table Content -->
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-gray-50 border-b-2 border-black">
-                            <tr>
-                                <th class="px-6 py-4 text-left text-lg font-black text-black border-r border-gray-300">Restaurant</th>
-                                <th class="px-6 py-4 text-left text-lg font-black text-black border-r border-gray-300">Owner</th>
-                                <th class="px-6 py-4 text-left text-lg font-black text-black border-r border-gray-300">Slug</th>
-                                <th class="px-6 py-4 text-left text-lg font-black text-black border-r border-gray-300">Plan</th>
-                                <th class="px-6 py-4 text-left text-lg font-black text-black border-r border-gray-300">Submitted</th>
-                                <th class="px-6 py-4 text-left text-lg font-black text-black">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y-2 divide-gray-200">
-                            @foreach($pendingRestaurants as $restaurant)
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-6 border-r border-gray-200">
-                                        <div>
-                                            <h4 class="text-lg font-bold text-black">{{ $restaurant->name }}</h4>
-                                            @if($restaurant->phone)
-                                                <p class="text-sm text-gray-600 font-medium">{{ $restaurant->phone }}</p>
-                                            @endif
-                                            @if($restaurant->address)
-                                                <p class="text-xs text-gray-500 mt-1">{{ Str::limit($restaurant->address, 50) }}</p>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-6 border-r border-gray-200">
-                                        @php $owner = $restaurant->getOwner(); @endphp
-                                        @if($owner)
-                                            <div>
-                                                <p class="text-lg font-bold text-black">{{ $owner->name }}</p>
-                                                <p class="text-sm text-gray-600 font-medium">{{ $owner->email }}</p>
-                                            </div>
-                                        @else
-                                            <span class="text-red-500 font-bold">No Owner</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-6 border-r border-gray-200">
-                                        <div class="flex items-center">
-                                            <code class="px-2 py-1 bg-gray-100 border border-gray-300 text-sm font-bold text-black">{{ $restaurant->slug }}</code>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-1">kite.test/{{ $restaurant->slug }}</p>
-                                    </td>
-                                    <td class="px-6 py-6 border-r border-gray-200">
-                                        <div>
-                                            <span class="px-3 py-1 bg-blue-100 border border-blue-300 text-sm font-bold text-blue-800 rounded">
-                                                {{ ucfirst(str_replace('_', ' ', $restaurant->subscription_plan)) }}
-                                            </span>
-                                            @if($restaurant->subscription_amount)
-                                                <p class="text-sm text-gray-600 font-bold mt-1">${{ number_format($restaurant->subscription_amount, 2) }}</p>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-6 border-r border-gray-200">
-                                        <div>
-                                            <p class="text-sm font-bold text-black">{{ $restaurant->created_at->format('M d, Y') }}</p>
-                                            <p class="text-xs text-gray-500">{{ $restaurant->created_at->diffForHumans() }}</p>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-6">
-                                        <div class="flex space-x-3">
-                                            <!-- Approve Button -->
-                                            <form method="POST" action="{{ route('super-admin.approve', $restaurant) }}" class="inline">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" 
-                                                        onclick="return confirm('Are you sure you want to approve {{ $restaurant->name }}?')"
-                                                        class="px-4 py-2 bg-emerald-400 border-2 border-black font-bold text-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">
-                                                    ✓ Approve
-                                                </button>
-                                            </form>
+                        <!-- Restaurant Details Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <!-- Owner Information -->
+                            <div class="bg-gray-50 border-2 border-gray-300 p-6">
+                                <h3 class="text-sm font-black text-black mb-4 uppercase tracking-wide">Owner Information</h3>
+                                <div class="space-y-3">
+                                    <div>
+                                        <p class="text-xs font-bold text-gray-600 uppercase">Name</p>
+                                        <p class="text-lg font-bold text-black">{{ $restaurant->getOwner()?->name ?? 'N/A' }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-gray-600 uppercase">Email</p>
+                                        <p class="text-lg font-bold text-black break-all">{{ $restaurant->getOwner()?->email ?? 'N/A' }}</p>
+                                    </div>
+                                </div>
+                            </div>
 
-                                            <!-- Reject Button -->
-                                            <button type="button" 
-                                                    x-data="{ showRejectModal: false }"
-                                                    @click="showRejectModal = true"
-                                                    class="px-4 py-2 bg-red-400 border-2 border-black font-bold text-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">
-                                                ✗ Reject
-                                            </button>
+                            <!-- Restaurant Information -->
+                            <div class="bg-gray-50 border-2 border-gray-300 p-6">
+                                <h3 class="text-sm font-black text-black mb-4 uppercase tracking-wide">Restaurant Information</h3>
+                                <div class="space-y-3">
+                                    <div>
+                                        <p class="text-xs font-bold text-gray-600 uppercase">Subscription Plan</p>
+                                        <p class="text-lg font-bold text-black capitalize">{{ $restaurant->subscription_plan ?? 'N/A' }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-gray-600 uppercase">Applied On</p>
+                                        <p class="text-lg font-bold text-black">{{ $restaurant->created_at->format('M d, Y') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                                            <!-- Reject Modal -->
-                                            <div x-data="{ showRejectModal: false }" x-show="showRejectModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
-                                                <div class="flex items-center justify-center min-h-screen px-4">
-                                                    <div class="fixed inset-0 bg-black opacity-50" @click="showRejectModal = false"></div>
-                                                    <div class="bg-white border-2 border-black p-8 max-w-md w-full relative">
-                                                        <h3 class="text-2xl font-black text-black mb-4">Reject {{ $restaurant->name }}?</h3>
-                                                        <form method="POST" action="{{ route('super-admin.reject', $restaurant) }}">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <div class="mb-4">
-                                                                <label class="block text-sm font-bold text-black mb-2">Reason (Optional)</label>
-                                                                <textarea name="reason" rows="3" class="w-full px-3 py-2 border-2 border-gray-300 focus:border-black focus:outline-none" placeholder="Provide a reason for rejection..."></textarea>
-                                                            </div>
-                                                            <div class="flex space-x-3">
-                                                                <button type="submit" class="px-4 py-2 bg-red-400 border-2 border-black font-bold text-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">
-                                                                    Confirm Reject
-                                                                </button>
-                                                                <button type="button" @click="showRejectModal = false" class="px-4 py-2 bg-gray-200 border-2 border-black font-bold text-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">
-                                                                    Cancel
-                                                                </button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        <!-- Restaurant Description -->
+                        @if($restaurant->description)
+                            <div class="mb-8 bg-gray-50 border-2 border-gray-300 p-6">
+                                <h3 class="text-sm font-black text-black mb-4 uppercase tracking-wide">Description</h3>
+                                <p class="text-base font-medium text-gray-700 leading-relaxed">{{ $restaurant->description }}</p>
+                            </div>
+                        @endif
 
-                <!-- Pagination -->
-                @if($pendingRestaurants->hasPages())
-                    <div class="border-t-2 border-black p-6">
-                        {{ $pendingRestaurants->links() }}
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <!-- Approve Button -->
+                            <form method="POST" action="{{ route('super-admin.pending.approve', $restaurant) }}" class="flex-1">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="w-full px-6 py-4 bg-emerald-600 border-4 border-black text-white font-black text-lg uppercase tracking-wide hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 transition-all duration-200">
+                                    Approve Restaurant
+                                </button>
+                            </form>
+
+                            <!-- Reject Button -->
+                            <form method="POST" action="{{ route('super-admin.pending.reject', $restaurant) }}" class="flex-1" onsubmit="return confirm('Are you sure you want to reject this restaurant? This action cannot be undone.');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-full px-6 py-4 bg-red-600 border-4 border-black text-white font-black text-lg uppercase tracking-wide hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 transition-all duration-200">
+                                    Reject Restaurant
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                @endif
+                @endforeach
             </div>
+
+            <!-- Pagination -->
+            @if($pendingRestaurants->hasPages())
+                <div class="mt-12">
+                    {{ $pendingRestaurants->links() }}
+                </div>
+            @endif
         @else
             <!-- Empty State -->
-            <div class="bg-white border-2 border-black p-12 text-center">
-                <div class="w-24 h-24 bg-gray-100 border-2 border-black mx-auto mb-6 flex items-center justify-center">
-                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-3xl font-black text-black mb-4">All Caught Up!</h3>
-                <p class="text-xl text-gray-600 font-medium">No pending restaurant applications to review.</p>
+            <div class="bg-white border-4 border-black p-12 text-center">
+                <h2 class="text-3xl font-black text-black mb-4">No Pending Restaurants</h2>
+                <p class="text-lg font-medium text-gray-600 mb-8">All restaurant applications have been reviewed. Check back later for new submissions.</p>
+                <a href="{{ route('super-admin.dashboard') }}" class="inline-block px-8 py-4 bg-black border-4 border-black text-white font-black text-lg uppercase tracking-wide hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 transition-all duration-200">
+                    Back to Dashboard
+                </a>
             </div>
         @endif
     </div>
-
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
 </body>
 </html>
