@@ -179,7 +179,7 @@
                             <div class="p-4">
                                 <div class="flex justify-between items-start mb-2">
                                     <h3 class="text-lg font-black text-gray-900">{{ $item->name }}</h3>
-                                    <span class="text-lg font-black restaurant-primary-text">${{ number_format($item->price, 2) }}</span>
+                                    <span class="text-lg font-black restaurant-primary-text">Rs {{ number_format($item->price, 2) }}</span>
                                 </div>
                                 
                                 @if($item->description)
@@ -291,7 +291,7 @@
                                     <div class="flex-1 p-4">
                                         <div class="flex justify-between items-start mb-1">
                                             <h3 class="text-base font-black text-gray-900">{{ $item->name }}</h3>
-                                            <span class="text-base font-black restaurant-primary-text">${{ number_format($item->price, 2) }}</span>
+                                            <span class="text-base font-black restaurant-primary-text">Rs {{ number_format($item->price, 2) }}</span>
                                         </div>
                                         
                                         @if($item->description)

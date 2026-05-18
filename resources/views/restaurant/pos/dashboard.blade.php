@@ -115,7 +115,7 @@
                         </svg>
                     </div>
                 </div>
-                <p class="text-3xl font-black text-emerald-700">$0.00</p>
+                <p class="text-3xl font-black text-emerald-700">Rs 0.00</p>
                 <p class="text-sm font-bold text-gray-600 mt-1">Revenue</p>
             </div>
 
@@ -162,7 +162,7 @@
                         </div>
                         <h4 class="font-bold text-black mb-1">Sample Item</h4>
                         <p class="text-sm text-gray-600 mb-2">Menu setup required</p>
-                        <p class="text-lg font-black text-emerald-700">$0.00</p>
+                        <p class="text-lg font-black text-emerald-700">Rs 0.00</p>
                     </div>
 
                     <!-- Add Menu Item Placeholder -->
@@ -216,15 +216,15 @@
                 <div class="border-t-2 border-black pt-4 mb-6">
                     <div class="flex justify-between items-center mb-2">
                         <span class="font-bold text-black">Subtotal:</span>
-                        <span class="font-bold text-black">$0.00</span>
+                        <span class="font-bold text-black">Rs 0.00</span>
                     </div>
                     <div class="flex justify-between items-center mb-2">
                         <span class="font-bold text-black">Tax:</span>
-                        <span class="font-bold text-black">$0.00</span>
+                        <span class="font-bold text-black">Rs 0.00</span>
                     </div>
                     <div class="flex justify-between items-center text-lg border-t border-gray-300 pt-2">
                         <span class="font-black text-black">Total:</span>
-                        <span class="font-black text-emerald-700">$0.00</span>
+                        <span class="font-black text-emerald-700">Rs 0.00</span>
                     </div>
                 </div>
 

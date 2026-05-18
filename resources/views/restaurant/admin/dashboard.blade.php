@@ -139,7 +139,7 @@
                         </svg>
                     </div>
                 </div>
-                <p class="text-3xl font-black text-emerald-700">$0.00</p>
+                <p class="text-3xl font-black text-emerald-700">Rs 0.00</p>
                 <p class="text-sm font-bold text-gray-600 mt-1">Today's total</p>
             </div>
 

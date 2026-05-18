@@ -57,7 +57,7 @@
                     <h3 class="font-bold text-lg text-gray-900 mb-2">Sample Dish</h3>
                     <p class="text-gray-600 text-sm mb-3">A delicious sample dish description</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-xl font-bold text-brand-primary">$12.99</span>
+                        <span class="text-xl font-bold text-brand-primary">Rs 1,299</span>
                         <button class="brand-primary text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity">
                             Add to Cart
                         </button>
@@ -72,7 +72,7 @@
                     <h3 class="font-bold text-lg text-gray-900 mb-2">Another Dish</h3>
                     <p class="text-gray-600 text-sm mb-3">Another delicious sample dish</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-xl font-bold text-brand-primary">$15.99</span>
+                        <span class="text-xl font-bold text-brand-primary">Rs 1,599</span>
                         <button class="brand-primary text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity">
                             Add to Cart
                         </button>
@@ -87,7 +87,7 @@
                     <h3 class="font-bold text-lg text-gray-900 mb-2">Special Item</h3>
                     <p class="text-gray-600 text-sm mb-3">Our chef's special recommendation</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-xl font-bold text-brand-primary">$18.99</span>
+                        <span class="text-xl font-bold text-brand-primary">Rs 1,899</span>
                         <button class="brand-secondary text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity">
                             Add to Cart
                         </button>
