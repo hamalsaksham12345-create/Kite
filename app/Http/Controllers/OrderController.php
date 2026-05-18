@@ -112,4 +112,111 @@ class OrderController extends Controller
             ],
         ]);
     }
+
+    /**
+     * Update order status to preparing (kitchen starts cooking)
+     */
+    public function updateToPreparing(Order $order)
+    {
+        // Verify order belongs to current restaurant
+        if ($order->restaurant_id !== auth()->user()->restaurant_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access to this order',
+            ], 403);
+        }
+
+        $order->update(['status' => 'preparing']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Order status updated to preparing',
+            'order' => [
+                'id' => $order->id,
+                'status' => $order->status,
+            ],
+        ]);
+    }
+
+    /**
+     * Update order status to ready (food is ready for delivery)
+     */
+    public function updateToReady(Order $order)
+    {
+        // Verify order belongs to current restaurant
+        if ($order->restaurant_id !== auth()->user()->restaurant_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access to this order',
+            ], 403);
+        }
+
+        $order->update(['status' => 'ready']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Order status updated to ready',
+            'order' => [
+                'id' => $order->id,
+                'status' => $order->status,
+            ],
+        ]);
+    }
+
+    /**
+     * Update order status to completed (delivered to table)
+     */
+    public function updateToCompleted(Order $order)
+    {
+        // Verify order belongs to current restaurant
+        if ($order->restaurant_id !== auth()->user()->restaurant_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access to this order',
+            ], 403);
+        }
+
+        $order->update(['status' => 'completed']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Order marked as completed',
+            'order' => [
+                'id' => $order->id,
+                'status' => $order->status,
+            ],
+        ]);
+    }
+
+    /**
+     * Get all orders for a restaurant (for POS and KDS)
+     */
+    public function getRestaurantOrders(Restaurant $restaurant)
+    {
+        $orders = Order::where('restaurant_id', $restaurant->id)
+            ->with('orderItems.menuItem')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'orders' => $orders->map(function ($order) {
+                return [
+                    'id' => $order->id,
+                    'table_number' => $order->table_number,
+                    'status' => $order->status,
+                    'total_price' => $order->total_price,
+                    'created_at' => $order->created_at,
+                    'items' => $order->orderItems->map(function ($item) {
+                        return [
+                            'id' => $item->id,
+                            'name' => $item->menuItem->name,
+                            'quantity' => $item->quantity,
+                            'price' => $item->price,
+                        ];
+                    }),
+                ];
+            }),
+        ]);
+    }
 }
