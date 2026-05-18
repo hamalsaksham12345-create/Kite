@@ -66,7 +66,7 @@
                                         <div>
                                             <h4 class="text-sm font-medium text-gray-700 mb-2">Subscription Plan</h4>
                                             <p class="text-sm text-gray-900 capitalize">{{ str_replace('_', ' ', $restaurant->subscription_plan) }}</p>
-                                            <p class="text-sm text-gray-600">${{ $restaurant->subscription_amount }}</p>
+                                            <p class="text-sm text-gray-600">Rs {{ $restaurant->subscription_amount }}</p>
                                         </div>
 
                                         <!-- Address -->

@@ -87,7 +87,7 @@
                         </svg>
                     </div>
                 </div>
-                <p class="text-4xl font-black text-emerald-700">${{ number_format($stats['total_revenue'], 2) }}</p>
+                <p class="text-4xl font-black text-emerald-700">Rs {{ number_format($stats['total_revenue'], 2) }}</p>
                 <p class="text-sm font-bold text-gray-600 mt-2">From all subscriptions</p>
             </div>
 
