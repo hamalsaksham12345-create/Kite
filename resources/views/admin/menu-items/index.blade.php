@@ -108,7 +108,7 @@
                                         <span class="text-lg font-bold text-black">{{ $item->category->name }}</span>
                                     </td>
                                     <td class="px-6 py-4 border-r-2 border-black">
-                                        <span class="text-lg font-black text-black">${{ number_format($item->price, 2) }}</span>
+                                        <span class="text-lg font-black text-black">Rs {{ number_format($item->price, 2) }}</span>
                                     </td>
                                     <td class="px-6 py-4 border-r-2 border-black">
                                         <div class="flex flex-col space-y-2">

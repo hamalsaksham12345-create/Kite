@@ -188,7 +188,7 @@
                                 <div class="p-4">
                                     <div class="flex justify-between items-start mb-2">
                                         <h3 class="text-lg font-black text-gray-900" x-text="formData.name || 'Menu Item Name'"></h3>
-                                        <span class="text-lg font-black text-emerald-600" x-text="formData.price ? '$' + parseFloat(formData.price).toFixed(2) : '$0.00'"></span>
+                                        <span class="text-lg font-black text-emerald-600" x-text="formData.price ? 'Rs ' + parseFloat(formData.price).toFixed(2) : 'Rs 0.00'"></span>
                                     </div>
                                     
                                     <p class="text-sm text-gray-600 mb-3" x-text="formData.description || 'Item description will appear here...'"></p>
