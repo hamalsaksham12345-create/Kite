@@ -458,8 +458,52 @@
                 },
                 
                 viewOrder() {
-                    // For now, just show an alert - this would typically navigate to checkout
-                    alert(`Order Summary:\n\n${this.cart.map(item => `${item.name} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`).join('\n')}\n\nTotal: $${this.cartTotal.toFixed(2)}\n\n(Checkout functionality coming soon!)`);
+                    if (this.cart.length === 0) {
+                        alert('Your cart is empty');
+                        return;
+                    }
+
+                    // Prepare items array with id and quantity only
+                    const items = this.cart.map(item => ({
+                        id: item.id,
+                        quantity: item.quantity
+                    }));
+
+                    // Get CSRF token from meta tag
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                    // Get the current restaurant slug from URL
+                    const restaurantSlug = window.location.pathname.split('/')[1] || window.location.hostname.split('.')[0];
+
+                    // Send checkout request
+                    fetch(`/${restaurantSlug}/checkout`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            items: items,
+                            table_number: null
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(`Order placed successfully!\n\nOrder Number: ${data.order_number}\nTotal: Rs ${parseFloat(data.total_amount).toFixed(2)}\n\nThank you for your order!`);
+                            // Clear cart after successful order
+                            this.cart = [];
+                            this.saveCart();
+                        } else {
+                            alert(`Error: ${data.message}`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Checkout error:', error);
+                        alert('An error occurred while placing your order. Please try again.');
+                    });
+                }
                 }
             }
         }
