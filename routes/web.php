@@ -112,6 +112,9 @@ Route::middleware(['restaurant.context'])->group(function () {
             return view('restaurant.menu', compact('categories', 'menuItems'));
         })->name('restaurant.menu');
         
+        // Public checkout route
+        Route::post('/checkout', [App\Http\Controllers\OrderController::class, 'store'])->name('restaurant.checkout');
+        
         Route::middleware(['auth', 'role:admin', 'restaurant.verified'])->group(function () {
             Route::get('/admin', function () {
                 return view('restaurant.admin.dashboard');
@@ -160,6 +163,9 @@ Route::middleware(['restaurant.context'])->group(function () {
             
             return view('restaurant.menu', compact('categories', 'menuItems'));
         })->name('restaurant.menu.path');
+        
+        // Public checkout route
+        Route::post('/checkout', [App\Http\Controllers\OrderController::class, 'store'])->name('restaurant.checkout.path');
         
         Route::middleware(['auth', 'role:admin', 'restaurant.verified'])->group(function () {
             Route::get('/admin', function () {
