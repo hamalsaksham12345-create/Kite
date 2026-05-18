@@ -141,6 +141,12 @@ Route::middleware(['restaurant.context'])->group(function () {
             Route::get('/kitchen', function () {
                 return view('restaurant.kitchen.dashboard');
             })->middleware(['role:chef'])->name('restaurant.kitchen.dashboard');
+            
+            // Order status update routes
+            Route::patch('/orders/{order}/preparing', [App\Http\Controllers\OrderController::class, 'updateToPreparing'])->name('order.preparing');
+            Route::patch('/orders/{order}/ready', [App\Http\Controllers\OrderController::class, 'updateToReady'])->name('order.ready');
+            Route::patch('/orders/{order}/completed', [App\Http\Controllers\OrderController::class, 'updateToCompleted'])->name('order.completed');
+            Route::get('/orders', [App\Http\Controllers\OrderController::class, 'getRestaurantOrders'])->name('orders.list');
         });
     });
     
@@ -193,6 +199,12 @@ Route::middleware(['restaurant.context'])->group(function () {
             Route::get('/kitchen', function () {
                 return view('restaurant.kitchen.dashboard');
             })->middleware(['role:chef'])->name('restaurant.kitchen.dashboard.path');
+            
+            // Order status update routes
+            Route::patch('/orders/{order}/preparing', [App\Http\Controllers\OrderController::class, 'updateToPreparing'])->name('order.preparing.path');
+            Route::patch('/orders/{order}/ready', [App\Http\Controllers\OrderController::class, 'updateToReady'])->name('order.ready.path');
+            Route::patch('/orders/{order}/completed', [App\Http\Controllers\OrderController::class, 'updateToCompleted'])->name('order.completed.path');
+            Route::get('/orders', [App\Http\Controllers\OrderController::class, 'getRestaurantOrders'])->name('orders.list.path');
         });
     });
 });
