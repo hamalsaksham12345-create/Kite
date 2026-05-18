@@ -48,8 +48,8 @@
                             <p class="text-gray-600 mb-6">Perfect for trying out Kite</p>
                             
                             <div class="mb-6">
-                                <span class="text-4xl font-black text-gray-900">$29</span>
-                                <span class="text-gray-600">.99/month</span>
+                                <span class="text-4xl font-black text-gray-900">Rs 2,999</span>
+                                <span class="text-gray-600">/month</span>
                             </div>
 
                             <ul class="text-left space-y-3 mb-8">
@@ -102,10 +102,10 @@
                             <p class="text-gray-600 mb-6">Best value for growing restaurants</p>
                             
                             <div class="mb-2">
-                                <span class="text-4xl font-black text-gray-900">$149</span>
-                                <span class="text-gray-600">.99/6 months</span>
+                                <span class="text-4xl font-black text-gray-900">Rs 14,999</span>
+                                <span class="text-gray-600">/6 months</span>
                             </div>
-                            <p class="text-sm text-emerald-600 font-semibold mb-6">Save $30 compared to monthly</p>
+                            <p class="text-sm text-emerald-600 font-semibold mb-6">Save Rs 3,000 compared to monthly</p>
 
                             <ul class="text-left space-y-3 mb-8">
                                 <li class="flex items-center">
@@ -151,10 +151,10 @@
                             <p class="text-gray-600 mb-6">Maximum savings for established restaurants</p>
                             
                             <div class="mb-2">
-                                <span class="text-4xl font-black text-gray-900">$299</span>
-                                <span class="text-gray-600">.99/year</span>
+                                <span class="text-4xl font-black text-gray-900">Rs 29,999</span>
+                                <span class="text-gray-600">/year</span>
                             </div>
-                            <p class="text-sm text-emerald-600 font-semibold mb-6">Save $60 compared to monthly</p>
+                            <p class="text-sm text-emerald-600 font-semibold mb-6">Save Rs 6,000 compared to monthly</p>
 
                             <ul class="text-left space-y-3 mb-8">
                                 <li class="flex items-center">
@@ -229,7 +229,7 @@
                             </div>
                             <div class="flex justify-between text-lg font-semibold pt-2 border-t border-gray-200">
                                 <span>Total:</span>
-                                <span x-text="selectedPlan === 'monthly' ? '$29.99' : selectedPlan === 'semi_annual' ? '$149.99' : '$299.99'"></span>
+                                <span x-text="selectedPlan === 'monthly' ? 'Rs 2,999' : selectedPlan === 'semi_annual' ? 'Rs 14,999' : 'Rs 29,999'"></span>
                             </div>
                         </div>
                     </div>
