@@ -14,43 +14,23 @@ class Order extends Model
 
     protected $fillable = [
         'restaurant_id',
-        'user_id',
-        'order_number',
         'table_number',
+        'total_price',
         'status',
-        'subtotal',
-        'tax_amount',
-        'total_amount',
-        'notes',
-        'served_at',
     ];
 
     protected $casts = [
-        'subtotal' => 'decimal:2',
-        'tax_amount' => 'decimal:2',
-        'total_amount' => 'decimal:2',
-        'served_at' => 'datetime',
+        'total_price' => 'decimal:2',
     ];
 
     protected static function booted()
     {
         static::addGlobalScope(new RestaurantScope);
-
-        static::creating(function ($order) {
-            if (empty($order->order_number)) {
-                $order->order_number = 'ORD-' . strtoupper(uniqid());
-            }
-        });
     }
 
     public function restaurant(): BelongsTo
     {
         return $this->belongsTo(Restaurant::class);
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 
     public function orderItems(): HasMany
@@ -73,9 +53,9 @@ class Order extends Model
         return $this->status === 'ready';
     }
 
-    public function isServed(): bool
+    public function isCompleted(): bool
     {
-        return $this->status === 'served';
+        return $this->status === 'completed';
     }
 
     public function isCancelled(): bool
@@ -83,3 +63,4 @@ class Order extends Model
         return $this->status === 'cancelled';
     }
 }
+

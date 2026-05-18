@@ -7,7 +7,6 @@ use App\Models\MenuItem;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
@@ -27,21 +26,11 @@ class OrderController extends Controller
         try {
             // Start database transaction for safety
             $order = DB::transaction(function () use ($validated, $restaurant) {
-                // Create the order
-                $order = Order::create([
-                    'restaurant_id' => $restaurant->id,
-                    'user_id' => auth()->id() ?? null,
-                    'table_number' => $validated['table_number'] ?? null,
-                    'status' => 'pending',
-                    'subtotal' => 0,
-                    'tax_amount' => 0,
-                    'total_amount' => 0,
-                ]);
-
-                $subtotal = 0;
+                $totalPrice = 0;
                 $items = $validated['items'];
 
-                // Process each item in the order
+                // First pass: verify all items and calculate total
+                $orderItems = [];
                 foreach ($items as $item) {
                     // Query the menu item directly from database to verify current price
                     $menuItem = MenuItem::findOrFail($item['id']);
@@ -53,31 +42,30 @@ class OrderController extends Controller
 
                     // Calculate item total using database price (not frontend price)
                     $quantity = $item['quantity'];
-                    $unitPrice = $menuItem->price;
-                    $itemTotal = $unitPrice * $quantity;
+                    $price = $menuItem->price;
+                    $itemTotal = $price * $quantity;
 
-                    // Create order item with captured price
-                    $order->orderItems()->create([
+                    $orderItems[] = [
                         'menu_item_id' => $menuItem->id,
                         'quantity' => $quantity,
-                        'unit_price' => $unitPrice,
-                        'total_price' => $itemTotal,
-                        'status' => 'pending',
-                    ]);
+                        'price' => $price,
+                    ];
 
-                    $subtotal += $itemTotal;
+                    $totalPrice += $itemTotal;
                 }
 
-                // Calculate tax (assuming 13% VAT for Nepal)
-                $taxAmount = $subtotal * 0.13;
-                $totalAmount = $subtotal + $taxAmount;
-
-                // Update order totals
-                $order->update([
-                    'subtotal' => $subtotal,
-                    'tax_amount' => $taxAmount,
-                    'total_amount' => $totalAmount,
+                // Create the order with calculated total
+                $order = Order::create([
+                    'restaurant_id' => $restaurant->id,
+                    'table_number' => $validated['table_number'] ?? null,
+                    'total_price' => $totalPrice,
+                    'status' => 'pending',
                 ]);
+
+                // Create order items
+                foreach ($orderItems as $item) {
+                    $order->orderItems()->create($item);
+                }
 
                 return $order;
             });
@@ -87,8 +75,7 @@ class OrderController extends Controller
                 'success' => true,
                 'message' => 'Order placed successfully',
                 'order_id' => $order->id,
-                'order_number' => $order->order_number,
-                'total_amount' => $order->total_amount,
+                'total_price' => $order->total_price,
                 'status' => $order->status,
             ], 201);
 
@@ -102,7 +89,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Get order details (for confirmation page)
+     * Get order details
      */
     public function show(Order $order)
     {
@@ -110,20 +97,16 @@ class OrderController extends Controller
             'success' => true,
             'order' => [
                 'id' => $order->id,
-                'order_number' => $order->order_number,
                 'table_number' => $order->table_number,
                 'status' => $order->status,
-                'subtotal' => $order->subtotal,
-                'tax_amount' => $order->tax_amount,
-                'total_amount' => $order->total_amount,
+                'total_price' => $order->total_price,
                 'items' => $order->orderItems->map(function ($item) {
                     return [
                         'id' => $item->id,
                         'menu_item_id' => $item->menu_item_id,
                         'menu_item_name' => $item->menuItem->name,
                         'quantity' => $item->quantity,
-                        'unit_price' => $item->unit_price,
-                        'total_price' => $item->total_price,
+                        'price' => $item->price,
                     ];
                 }),
             ],

@@ -14,15 +14,11 @@ class OrderItem extends Model
         'order_id',
         'menu_item_id',
         'quantity',
-        'unit_price',
-        'total_price',
-        'special_instructions',
-        'status',
+        'price',
     ];
 
     protected $casts = [
-        'unit_price' => 'decimal:2',
-        'total_price' => 'decimal:2',
+        'price' => 'decimal:2',
     ];
 
     public function order(): BelongsTo
@@ -33,20 +29,5 @@ class OrderItem extends Model
     public function menuItem(): BelongsTo
     {
         return $this->belongsTo(MenuItem::class);
-    }
-
-    public function isPending(): bool
-    {
-        return $this->status === 'pending';
-    }
-
-    public function isPreparing(): bool
-    {
-        return $this->status === 'preparing';
-    }
-
-    public function isReady(): bool
-    {
-        return $this->status === 'ready';
     }
 }
