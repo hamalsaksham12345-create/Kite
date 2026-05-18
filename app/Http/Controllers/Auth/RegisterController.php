@@ -83,11 +83,7 @@ class RegisterController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => 'required|in:waiter,chef',
-            'invite_code' => 'nullable|string',
         ]);
-
-        // TODO: Implement invite code validation if needed
-        // For now, allow open registration for active restaurants
 
         $user = User::create([
             'name' => $validated['name'],
@@ -100,13 +96,11 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        // Redirect based on role
-        if ($user->isWaiter()) {
-            return redirect()->route('restaurant.pos.dashboard');
-        } elseif ($user->isChef()) {
-            return redirect()->route('restaurant.kitchen.dashboard');
-        }
-
-        return redirect()->route('home');
+        // Redirect based on role using match expression
+        return redirect(match($user->role) {
+            'waiter' => route('restaurant.pos.dashboard.path', $restaurant->slug),
+            'chef' => route('restaurant.kitchen.dashboard.path', $restaurant->slug),
+            default => route('home'),
+        });
     }
 }
