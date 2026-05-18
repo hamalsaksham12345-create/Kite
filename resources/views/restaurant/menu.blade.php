@@ -491,7 +491,7 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            alert(`Order placed successfully!\n\nOrder Number: ${data.order_number}\nTotal: Rs ${parseFloat(data.total_amount).toFixed(2)}\n\nThank you for your order!`);
+                            alert(`Order placed successfully!\n\nOrder ID: ${data.order_id}\nTotal: Rs ${parseFloat(data.total_price).toFixed(2)}\n\nThank you for your order!`);
                             // Clear cart after successful order
                             this.cart = [];
                             this.saveCart();
