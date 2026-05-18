@@ -116,9 +116,7 @@ Route::middleware(['restaurant.context'])->group(function () {
         Route::post('/checkout', [App\Http\Controllers\OrderController::class, 'store'])->name('restaurant.checkout');
         
         Route::middleware(['auth', 'role:admin', 'restaurant.verified'])->group(function () {
-            Route::get('/admin', function () {
-                return view('restaurant.admin.dashboard');
-            })->name('restaurant.admin.dashboard');
+            Route::get('/admin', [App\Http\Controllers\AdminDashboardController::class, 'index'])->name('restaurant.admin.dashboard');
             
             // Category Management Routes
             Route::resource('admin/categories', CategoryController::class, ['as' => 'admin']);
@@ -174,9 +172,7 @@ Route::middleware(['restaurant.context'])->group(function () {
         Route::post('/checkout', [App\Http\Controllers\OrderController::class, 'store'])->name('restaurant.checkout.path');
         
         Route::middleware(['auth', 'role:admin', 'restaurant.verified'])->group(function () {
-            Route::get('/admin', function () {
-                return view('restaurant.admin.dashboard');
-            })->name('restaurant.admin.dashboard.path');
+            Route::get('/admin', [App\Http\Controllers\AdminDashboardController::class, 'index'])->name('restaurant.admin.dashboard.path');
             
             // Category Management Routes
             Route::resource('admin/categories', CategoryController::class, ['as' => 'admin.path']);
