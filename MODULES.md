@@ -139,23 +139,40 @@ This document outlines all core modules in the Kite restaurant SaaS platform and
 
 ## 5. Table Management
 
-**Status:** ⚠️ PARTIAL
+**Status:** ✅ IMPLEMENTED
 
 ### Features:
-- Table model created
-- Database structure ready
+- Table CRUD operations
+- Table status management (available, occupied, reserved, maintenance)
+- Table capacity management (1-20 seats)
+- Table statistics dashboard
+- QR code generation for each table
+- Table assignment to orders
+- Admin interface for table management
 
 ### Files:
+- `app/Http/Controllers/TableController.php`
 - `app/Models/Table.php`
+- `resources/views/admin/tables/index.blade.php`
+- `resources/views/admin/tables/create.blade.php`
+- `resources/views/admin/tables/edit.blade.php`
+- `resources/views/admin/tables/qr.blade.php`
 - `database/migrations/2026_05_22_000001_create_tables_table.php`
 
+### Routes:
+- `GET /{slug}/admin/tables` - List tables
+- `GET /{slug}/admin/tables/create` - Create table form
+- `POST /{slug}/admin/tables` - Store table
+- `GET /{slug}/admin/tables/{table}/edit` - Edit table form
+- `PUT /{slug}/admin/tables/{table}` - Update table
+- `DELETE /{slug}/admin/tables/{table}` - Delete table
+- `PATCH /{slug}/admin/tables/{table}/change-status` - Change table status
+- `GET /{slug}/admin/tables/{table}/qr` - Generate QR code
+
 ### TODO:
-- [ ] Table CRUD operations
-- [ ] Table status management (available, occupied, reserved, maintenance)
-- [ ] Table capacity management
-- [ ] Table assignment to orders
 - [ ] Table reservation system
-- [ ] Admin interface for table management
+- [ ] Table assignment to orders
+- [ ] Table occupancy tracking
 
 ---
 
@@ -306,7 +323,7 @@ This document outlines all core modules in the Kite restaurant SaaS platform and
 | Restaurant/Tenant Management | ✅ Complete | High |
 | Website Builder | ⚠️ Partial | Medium |
 | Menu Management | ✅ Complete | High |
-| Table Management | ⚠️ Partial | Medium |
+| Table Management | ✅ Complete | High |
 | Order Management | ✅ Complete | High |
 | Kitchen Display | ✅ Complete | High |
 | Billing/POS | ⚠️ Partial | High |
