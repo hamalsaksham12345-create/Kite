@@ -12,12 +12,14 @@ class SuperAdminSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::create([
-            'name' => 'Super Admin',
-            'email' => 'admin@kite.test',
-            'password' => \Illuminate\Support\Facades\Hash::make('password'),
-            'role' => 'super_admin',
-            'is_active' => true,
-        ]);
+        \App\Models\User::firstOrCreate(
+            ['email' => 'admin@kite.test'],
+            [
+                'name' => 'Super Admin',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'role' => 'super_admin',
+                'is_active' => true,
+            ]
+        );
     }
 }
