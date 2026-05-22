@@ -77,19 +77,19 @@ class LoginController extends Controller
             return redirect()->intended(route('super-admin.dashboard'));
         } elseif ($user->isAdmin()) {
             if ($user->restaurant && $user->restaurant->is_verified) {
-                return redirect()->intended(route('restaurant.admin.dashboard'));
+                return redirect()->intended(route('restaurant.admin.dashboard.path', $user->restaurant->slug));
             } else {
                 return redirect()->route('onboarding.pending');
             }
         } elseif ($user->isWaiter()) {
             if ($user->restaurant && $user->restaurant->is_verified) {
-                return redirect()->intended(route('restaurant.pos.dashboard'));
+                return redirect()->intended(route('restaurant.pos.dashboard.path', $user->restaurant->slug));
             } else {
                 return redirect()->route('home')->with('info', 'Please wait for your restaurant to be verified.');
             }
         } elseif ($user->isChef()) {
             if ($user->restaurant && $user->restaurant->is_verified) {
-                return redirect()->intended(route('restaurant.kitchen.dashboard'));
+                return redirect()->intended(route('restaurant.kitchen.dashboard.path', $user->restaurant->slug));
             } else {
                 return redirect()->route('home')->with('info', 'Please wait for your restaurant to be verified.');
             }
