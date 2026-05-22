@@ -244,6 +244,13 @@ Route::middleware(['restaurant.context'])->group(function () {
                 ->name('admin.path.menu-items.toggle-availability');
             Route::patch('admin/menu-items/{menuItem}/toggle-featured', [MenuItemController::class, 'toggleFeatured'])
                 ->name('admin.path.menu-items.toggle-featured');
+            
+            // Table Management
+            Route::resource('admin/tables', \App\Http\Controllers\TableController::class, ['as' => 'admin.path']);
+            Route::patch('admin/tables/{table}/change-status', [\App\Http\Controllers\TableController::class, 'changeStatus'])
+                ->name('admin.path.tables.change-status');
+            Route::get('admin/tables/{table}/qr', [\App\Http\Controllers\TableController::class, 'generateQR'])
+                ->name('admin.path.tables.qr');
         });
         
         // ====================================================================
