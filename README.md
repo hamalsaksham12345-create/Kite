@@ -1,248 +1,383 @@
-# 🪁 Kite - Multi-Tenant Restaurant SaaS Platform
+# Kite - Multi-Tenant Restaurant Management SaaS Platform
 
-A comprehensive multi-tenant restaurant management platform built with Laravel 13, featuring role-based access control, dynamic theming, and a complete POS system.
+![Kite Logo](https://via.placeholder.com/200x50?text=KITE)
 
-## 🚀 Features
+## Overview
 
-### ✅ **Implemented**
-- **Multi-Tenant Architecture**: Complete data isolation between restaurants
-- **Role-Based Access Control**: Super Admin, Restaurant Admin, Waiter, and Chef roles
-- **Dynamic Theming**: Restaurant-specific colors and branding
-- **Super Admin Dashboard**: Complete restaurant management system
-- **Responsive Design**: Mobile-first approach with Tailwind CSS
-- **Custom Authentication**: Secure login system without external dependencies
+**Kite** is a comprehensive, multi-tenant SaaS-based restaurant management platform designed to empower restaurant owners with a complete digital ecosystem. From website generation to kitchen operations, Kite provides an all-in-one solution that eliminates the need for separate tools and developers.
 
-### 🔄 **In Development**
-- Restaurant Admin CMS (menu management, settings)
-- Waiter POS System (order taking, table management)
-- Chef Kitchen Display (order status management)
-- Real-time order updates
-- Payment integration
+### Vision
 
-## 🏗️ Architecture
+To democratize restaurant digitization by providing an affordable, scalable, and user-friendly platform that enables restaurants of all sizes to establish a professional online presence and streamline their operations through a single integrated system.
 
-### Database Design
+---
+
+## Key Features
+
+### 🏢 For Restaurant Owners
+
+- **No-Code Website Builder** - Create and customize restaurant websites without coding
+- **Digital Menu Management** - Easily manage categories, items, pricing, and availability
+- **Real-Time Analytics** - Monitor sales, popular dishes, and business performance
+- **Staff Management** - Invite and manage waiters, chefs, and cashiers
+- **Subscription Plans** - Flexible pricing tiers (Basic, Professional, Enterprise)
+- **Custom Branding** - Change colors, logos, and business information instantly
+
+### 👥 For Customers
+
+- **Digital Menu Browsing** - View restaurant menus with images and descriptions
+- **Online Ordering** - Place orders directly from the website
+- **QR-Based Menu Access** - Scan QR codes at tables for instant menu access
+- **Order Tracking** - Real-time order status updates
+
+### 👨‍🍳 For Kitchen Staff
+
+- **Kitchen Display System (KDS)** - Real-time order updates with Kanban board
+- **Order Management** - View, prepare, and mark orders as ready
+- **Time Tracking** - See how long each order has been in preparation
+- **Item Quantities** - Clear visibility of all items in each order
+
+### 💼 For Waiters/POS Staff
+
+- **Digital Ordering System** - Take orders directly from tables using tablets
+- **Table Management** - Track table status and occupancy
+- **Order Delivery** - Mark orders as delivered to customers
+- **Payment Processing** - Process payments and generate receipts
+
+---
+
+## Technology Stack
+
+### Frontend
+- **HTML5** - Semantic markup
+- **JavaScript (Alpine.js)** - Interactive components and real-time updates
+- **Tailwind CSS** - Responsive, utility-first styling
+- **Rhetorich Design** - Bold typography, thick borders, heavy shadows
+
+### Backend
+- **Laravel 13** - PHP web framework
+- **MySQL** - Relational database
+- **Laravel Eloquent ORM** - Database abstraction
+- **Laravel Middleware** - Authentication and authorization
+
+### Architecture
+- **Multi-Tenant** - Slug-based routing with isolated data
+- **RESTful APIs** - JSON endpoints for frontend communication
+- **Real-Time Updates** - AJAX polling for live data synchronization
+- **Database Transactions** - Atomic operations for data integrity
+
+---
+
+## Core Modules
+
+### 1. Authentication & Authorization ✅
+- User registration and login
+- Staff onboarding with role assignment
+- Role-based access control (Super Admin, Admin, Waiter, Chef, Cashier)
+- Session management and logout
+
+### 2. Restaurant Management ✅
+- Restaurant registration and onboarding
+- Super admin approval workflow
+- Restaurant verification and suspension
+- Multi-tenant data isolation
+- Custom branding (colors, logos)
+
+### 3. Menu Management ✅
+- Category CRUD operations
+- Menu item management with images
+- Price management in Nepali Rs
+- Item availability and featured status
+- Sort order customization
+- Live preview functionality
+
+### 4. Order Management ✅
+- Order creation from digital menu
+- Order status tracking (pending → preparing → ready → completed)
+- Price verification on backend
+- Order item tracking with quantities
+- Database transaction safety
+
+### 5. Kitchen Display System ✅
+- Real-time order display
+- Kanban board layout (New, In Preparation, Ready)
+- Order status updates
+- Time tracking for each order
+- Auto-refresh every 3-5 seconds
+
+### 6. POS & Billing ⚠️
+- Table matrix display
+- Order ticket stream
+- Payment model and database structure
+- **TODO:** Payment gateway integration, multiple payment methods
+
+### 7. Table Management ⚠️
+- Table model and database structure
+- Table capacity and status tracking
+- **TODO:** CRUD operations, reservations, table assignment
+
+### 8. Analytics Dashboard ⚠️
+- Total revenue calculation
+- Order statistics
+- Top selling items report
+- Active orders tracking
+- **TODO:** Advanced reports, date filtering, trends, exports
+
+### 9. Subscription System ⚠️
+- Subscription model and database structure
+- Plan management (Basic, Professional, Enterprise)
+- Feature flags (analytics, delivery, loyalty)
+- **TODO:** Payment processing, renewal, upgrades
+
+### 10. Website Builder ⚠️
+- Dynamic branding with CSS variables
+- Public menu view
+- Restaurant information display
+- **TODO:** Customization interface, custom domains, SEO
+
+---
+
+## Project Structure
+
 ```
-restaurants (1) ──→ (∞) users
-restaurants (1) ──→ (∞) categories
-restaurants (1) ──→ (∞) menu_items
-restaurants (1) ──→ (∞) orders
-orders (1) ──→ (∞) order_items
-categories (1) ──→ (∞) menu_items
+kite/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Auth/
+│   │   │   ├── SuperAdmin/
+│   │   │   ├── AdminDashboardController.php
+│   │   │   ├── CategoryController.php
+│   │   │   ├── MenuItemController.php
+│   │   │   ├── OrderController.php
+│   │   │   └── ...
+│   │   └── Middleware/
+│   │       ├── RestaurantContextMiddleware.php
+│   │       ├── EnsureRestaurantIsVerified.php
+│   │       ├── RoleMiddleware.php
+│   │       └── ...
+│   └── Models/
+│       ├── User.php
+│       ├── Restaurant.php
+│       ├── Category.php
+│       ├── MenuItem.php
+│       ├── Order.php
+│       ├── OrderItem.php
+│       ├── Table.php
+│       ├── Payment.php
+│       ├── Subscription.php
+│       ├── RestaurantSetting.php
+│       └── Role.php
+├── database/
+│   ├── migrations/
+│   ├── seeders/
+│   └── factories/
+├── resources/
+│   ├── views/
+│   │   ├── auth/
+│   │   ├── admin/
+│   │   ├── restaurant/
+│   │   ├── super-admin/
+│   │   └── layouts/
+│   ├── css/
+│   └── js/
+├── routes/
+│   └── web.php
+├── config/
+├── public/
+├── storage/
+└── tests/
 ```
 
-### User Roles
-- **Super Admin**: Manage all restaurants and create new ones
-- **Admin (Owner)**: Restaurant-specific management and settings
-- **Waiter (POS)**: Take orders and manage tables
-- **Chef (BOH)**: Kitchen display and order status management
+---
 
-### Multi-Tenancy
-- Global scopes automatically filter data by `restaurant_id`
-- Middleware ensures users only see their restaurant's data
-- Dynamic routing supports both subdomain and path-based access
+## Database Schema
 
-## 🛠️ Installation
+### Core Tables
+- **users** - User accounts with roles
+- **restaurants** - Restaurant information and settings
+- **roles** - Role definitions
+- **categories** - Menu categories
+- **menu_items** - Individual menu items
+- **tables** - Restaurant tables
+- **orders** - Customer orders
+- **order_items** - Items within orders
+- **payments** - Payment records
+- **subscriptions** - Restaurant subscriptions
+- **restaurant_settings** - Restaurant configuration
+
+---
+
+## Getting Started
 
 ### Prerequisites
-- PHP 8.3+
+- PHP 8.5+
+- MySQL 8.0+
 - Composer
 - Node.js & npm
-- MySQL/SQLite
 
-### Quick Start
+### Installation
+
+1. **Clone the repository**
 ```bash
-# Clone the repository
-git clone <repository-url> kite
+git clone https://github.com/yourusername/kite.git
 cd kite
-
-# Run the setup script
-./start-dev.sh
-
-# Start the development server
-php artisan serve
 ```
 
-### Manual Installation
+2. **Install dependencies**
 ```bash
-# Install PHP dependencies
 composer install
-
-# Install Node.js dependencies
 npm install
+```
 
-# Create environment file
+3. **Environment setup**
+```bash
 cp .env.example .env
-
-# Generate application key
 php artisan key:generate
+```
 
-# Configure your database in .env file
-# DB_CONNECTION=mysql
-# DB_HOST=127.0.0.1
-# DB_PORT=3306
-# DB_DATABASE=kite
-# DB_USERNAME=your_username
-# DB_PASSWORD=your_password
-
-# Run migrations
+4. **Database setup**
+```bash
 php artisan migrate
-
-# Seed demo data
 php artisan db:seed
+```
 
-# Build frontend assets
+5. **Build assets**
+```bash
 npm run build
+```
 
-# Start the server
+6. **Start development server**
+```bash
 php artisan serve
 ```
 
-## 🔐 Demo Credentials
+Visit `http://localhost:8000` to access the platform.
 
-### Super Admin
-- **Email**: `admin@kite.test`
-- **Password**: `password`
-- **Access**: Complete system management
+---
 
-### Restaurant Admin (Demo Pizza Palace)
-- **Email**: `admin@demopizza.com`
-- **Password**: `password`
-- **Access**: Restaurant-specific management
+## Usage
 
-## 📱 Usage
+### For Super Administrators
 
-### Super Admin Dashboard
-1. Login with super admin credentials
-2. Navigate to `/super-admin/restaurants`
-3. Create, edit, or manage restaurants
-4. Assign master admin users to restaurants
+1. Access `/super-admin` dashboard
+2. View pending restaurant registrations
+3. Approve or reject restaurants
+4. Manage all restaurants
+5. Suspend/reactivate restaurants
 
-### Restaurant Management
-1. Login as restaurant admin
-2. Access restaurant-specific dashboard
-3. Manage menu categories and items (coming soon)
-4. Configure restaurant settings and branding (coming soon)
+### For Restaurant Owners
 
-### Dynamic Routing
-The platform supports flexible routing:
-- **Subdomain**: `{restaurant-slug}.kite.test`
-- **Path-based**: `kite.test/{restaurant-slug}`
+1. Register restaurant at `/get-started`
+2. Select subscription plan
+3. Wait for super admin approval
+4. Access admin dashboard at `/{slug}/admin`
+5. Manage menu, staff, and view analytics
 
-## 🎨 Theming System
+### For Waiters
 
-Each restaurant can customize:
-- **Primary Color**: Main brand color
-- **Secondary Color**: Accent color
-- **Logo**: Restaurant logo display
-- **CSS Variables**: Dynamic color injection
+1. Access POS dashboard at `/{slug}/pos`
+2. View table matrix
+3. Take orders from customers
+4. Mark orders as delivered
 
-Colors are automatically applied using CSS variables:
-```css
-:root {
-    --primary-color: #E53E3E;
-    --secondary-color: #2D3748;
-}
+### For Kitchen Staff
+
+1. Access kitchen dashboard at `/{slug}/kitchen`
+2. View orders in Kanban board
+3. Update order status (preparing → ready)
+4. Track order preparation time
+
+---
+
+## API Endpoints
+
+### Authentication
+- `POST /login` - User login
+- `POST /register` - Restaurant registration
+- `POST /logout` - User logout
+- `GET /join/{slug}` - Staff registration form
+- `POST /join/{slug}` - Register staff member
+
+### Menu Management
+- `GET /{slug}/admin/categories` - List categories
+- `POST /{slug}/admin/categories` - Create category
+- `PUT /{slug}/admin/categories/{id}` - Update category
+- `DELETE /{slug}/admin/categories/{id}` - Delete category
+- `GET /{slug}/admin/menu-items` - List menu items
+- `POST /{slug}/admin/menu-items` - Create menu item
+- `PUT /{slug}/admin/menu-items/{id}` - Update menu item
+- `DELETE /{slug}/admin/menu-items/{id}` - Delete menu item
+
+### Orders
+- `POST /{slug}/checkout` - Create order
+- `GET /{slug}/orders` - Get restaurant orders
+- `PATCH /{slug}/orders/{id}/preparing` - Mark as preparing
+- `PATCH /{slug}/orders/{id}/ready` - Mark as ready
+- `PATCH /{slug}/orders/{id}/completed` - Mark as completed
+
+### Analytics
+- `GET /{slug}/admin` - Admin dashboard with metrics
+
+---
+
+## Design Language
+
+Kite uses the **Rhetorich Design System** characterized by:
+- **Bold Typography** - Heavy font weights (font-black, font-bold)
+- **Thick Borders** - 4px solid black borders (border-4 border-black)
+- **Heavy Shadows** - Offset shadows for depth (shadow-[4px_4px_0px_0px_rgba(0,0,0,1)])
+- **No Icons/Emojis** - Pure text-based interface
+- **High Contrast** - Black and white with accent colors
+- **Responsive Grid** - Bento grid layouts
+
+---
+
+## Multi-Tenant Architecture
+
+### Slug-Based Routing
+```
+Path-based: http://localhost:8000/{restaurant-slug}/admin
+Subdomain-based: http://{restaurant-slug}.kite.test/admin
 ```
 
-## 🗂️ Project Structure
+### Data Isolation
+- All queries automatically scoped to `auth()->user()->restaurant_id`
+- Middleware ensures restaurant context is set
+- Soft deletes for data recovery
 
-```
-app/
-├── Http/
-│   ├── Controllers/
-│   │   ├── Auth/                    # Authentication controllers
-│   │   └── SuperAdmin/              # Super admin controllers
-│   └── Middleware/
-│       ├── RoleMiddleware.php       # Role-based access control
-│       └── RestaurantContextMiddleware.php  # Restaurant context
-├── Models/                          # Eloquent models
-├── Scopes/
-│   └── RestaurantScope.php         # Multi-tenancy global scope
-└── ...
+### Security
+- Restaurant ID verification on all operations
+- Role-based middleware checks
+- CSRF protection on all forms
+- Input validation and sanitization
 
-database/
-├── migrations/                      # Database schema
-└── seeders/                        # Demo data seeders
+---
 
-resources/
-├── css/
-│   └── app.css                     # Tailwind CSS
-├── js/
-│   └── app.js                      # Frontend JavaScript
-└── views/
-    ├── layouts/                    # Blade layouts
-    ├── auth/                       # Authentication views
-    ├── super-admin/                # Super admin interface
-    └── ...
-```
+## Deployment
 
-## 🔧 Development
+### Production Checklist
+- [ ] Set `APP_ENV=production`
+- [ ] Set `APP_DEBUG=false`
+- [ ] Configure MySQL database
+- [ ] Set up SSL certificate
+- [ ] Configure email service
+- [ ] Set up payment gateway
+- [ ] Configure file storage (S3)
+- [ ] Set up monitoring and logging
+- [ ] Configure backup strategy
 
-### Running Tests
-```bash
-php artisan test
-```
+### Deployment Platforms
+- **Heroku** - Easy deployment with buildpacks
+- **DigitalOcean** - VPS with full control
+- **AWS** - Scalable cloud infrastructure
+- **Laravel Forge** - Optimized Laravel hosting
 
-### Code Style
-```bash
-# Format code
-./vendor/bin/pint
+---
 
-# Check code style
-./vendor/bin/pint --test
-```
+## Contributing
 
-### Frontend Development
-```bash
-# Watch for changes (development)
-npm run dev
-
-# Build for production
-npm run build
-```
-
-### Database Management
-```bash
-# Fresh migration with seeding
-php artisan migrate:fresh --seed
-
-# Create new migration
-php artisan make:migration create_table_name
-
-# Create new seeder
-php artisan make:seeder TableSeeder
-```
-
-## 🚀 Deployment
-
-### Production Setup
-1. Set `APP_ENV=production` in `.env`
-2. Set `APP_DEBUG=false` in `.env`
-3. Configure production database
-4. Run `composer install --optimize-autoloader --no-dev`
-5. Run `npm run build`
-6. Run `php artisan config:cache`
-7. Run `php artisan route:cache`
-8. Run `php artisan view:cache`
-
-### Environment Variables
-```env
-APP_NAME=Kite
-APP_ENV=production
-APP_KEY=base64:...
-APP_DEBUG=false
-APP_URL=https://your-domain.com
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=kite_production
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
-```
-
-## 🤝 Contributing
+We welcome contributions! Please follow these steps:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -250,51 +385,76 @@ DB_PASSWORD=your_password
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+### Commit Message Format
+```
+<type>: <subject>
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+<body>
 
-## 🆘 Support
+<footer>
+```
 
-If you encounter any issues:
-
-1. Check the [troubleshooting guide](TROUBLESHOOTING.md)
-2. Search existing [issues](../../issues)
-3. Create a new issue with detailed information
-
-## 🗺️ Roadmap
-
-### Phase 1: Foundation ✅
-- [x] Multi-tenant architecture
-- [x] User authentication and roles
-- [x] Super admin dashboard
-- [x] Dynamic theming system
-
-### Phase 2: Restaurant Management 🔄
-- [ ] Restaurant admin CMS
-- [ ] Menu management system
-- [ ] Staff user management
-- [ ] Restaurant settings
-
-### Phase 3: POS System 📋
-- [ ] Waiter interface
-- [ ] Table management
-- [ ] Order creation and management
-- [ ] Mobile-responsive design
-
-### Phase 4: Kitchen Operations 👨‍🍳
-- [ ] Kitchen display system
-- [ ] Order status management
-- [ ] Real-time updates
-- [ ] Kitchen-optimized interface
-
-### Phase 5: Advanced Features 🚀
-- [ ] Payment integration
-- [ ] Reporting and analytics
-- [ ] API endpoints
-- [ ] Mobile applications
-- [ ] Multi-language support
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
 ---
 
-**Built with ❤️ using Laravel 13, Tailwind CSS, and modern web technologies.**
+## Roadmap
+
+### Q2 2026
+- ✅ Core authentication and authorization
+- ✅ Restaurant management
+- ✅ Menu management
+- ✅ Order management
+- ✅ Kitchen display system
+- ⏳ Payment gateway integration
+
+### Q3 2026
+- ⏳ Advanced analytics and reporting
+- ⏳ Table management and reservations
+- ⏳ Website customization interface
+- ⏳ Mobile app (React Native)
+
+### Q4 2026
+- ⏳ Loyalty program
+- ⏳ Customer reviews and ratings
+- ⏳ Marketing tools
+- ⏳ Inventory management
+
+### 2027
+- ⏳ AI-powered recommendations
+- ⏳ Multi-location support
+- ⏳ Franchise management
+- ⏳ Advanced integrations
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Support
+
+For support, email support@kite.com or visit our documentation at [docs.kite.com](https://docs.kite.com)
+
+---
+
+## Acknowledgments
+
+- Laravel community for the excellent framework
+- Tailwind CSS for the utility-first CSS framework
+- All contributors and testers
+
+---
+
+## Contact
+
+- **Website:** https://kite.com
+- **Email:** hello@kite.com
+- **Twitter:** @KiteRestaurants
+- **LinkedIn:** Kite Restaurant Management
+
+---
+
+**Made with ❤️ for restaurants worldwide**
