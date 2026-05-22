@@ -18,21 +18,23 @@ class MenuSeeder extends Seeder
         $restaurant = Restaurant::first();
         
         if (!$restaurant) {
-            $restaurant = Restaurant::create([
-                'name' => 'Demo Restaurant',
-                'slug' => 'demo-restaurant',
-                'email' => 'demo@restaurant.com',
-                'phone' => '555-0123',
-                'address' => '123 Main St, City, State',
-                'primary_color' => '#10b981',
-                'secondary_color' => '#065f46',
-                'is_active' => true,
-                'is_verified' => true,
-                'subscription_expires_at' => now()->addYear(),
-                'subscription_plan' => 'premium',
-                'subscription_amount' => 99.99,
-                'verified_at' => now(),
-            ]);
+            $restaurant = Restaurant::firstOrCreate(
+                ['slug' => 'demo-restaurant'],
+                [
+                    'name' => 'Demo Restaurant',
+                    'email' => 'demo@restaurant.com',
+                    'phone' => '555-0123',
+                    'address' => '123 Main St, City, State',
+                    'primary_color' => '#10b981',
+                    'secondary_color' => '#065f46',
+                    'is_active' => true,
+                    'is_verified' => true,
+                    'subscription_expires_at' => now()->addYear(),
+                    'subscription_plan' => 'premium',
+                    'subscription_amount' => 99.99,
+                    'verified_at' => now(),
+                ]
+            );
         }
 
         // Create categories
@@ -60,13 +62,19 @@ class MenuSeeder extends Seeder
         ];
 
         foreach ($categories as $categoryData) {
-            $category = Category::create([
-                'restaurant_id' => $restaurant->id,
-                'name' => $categoryData['name'],
-                'description' => $categoryData['description'],
-                'sort_order' => $categoryData['sort_order'],
-                'is_active' => true,
-            ]);
+            $slug = \Illuminate\Support\Str::slug($categoryData['name']);
+            $category = Category::firstOrCreate(
+                [
+                    'restaurant_id' => $restaurant->id,
+                    'slug' => $slug,
+                ],
+                [
+                    'name' => $categoryData['name'],
+                    'description' => $categoryData['description'],
+                    'sort_order' => $categoryData['sort_order'],
+                    'is_active' => true,
+                ]
+            );
 
             // Create menu items for each category
             $this->createMenuItemsForCategory($category);
@@ -207,19 +215,25 @@ class MenuSeeder extends Seeder
         }
 
         foreach ($menuItems as $index => $itemData) {
-            MenuItem::create([
-                'restaurant_id' => $category->restaurant_id,
-                'category_id' => $category->id,
-                'name' => $itemData['name'],
-                'description' => $itemData['description'],
-                'price' => $itemData['price'],
-                'ingredients' => $itemData['ingredients'],
-                'allergens' => $itemData['allergens'],
-                'preparation_time' => $itemData['preparation_time'],
-                'sort_order' => $index + 1,
-                'is_available' => true,
-                'is_featured' => $itemData['is_featured'] ?? false,
-            ]);
+            $slug = \Illuminate\Support\Str::slug($itemData['name']);
+            MenuItem::firstOrCreate(
+                [
+                    'restaurant_id' => $category->restaurant_id,
+                    'category_id' => $category->id,
+                    'slug' => $slug,
+                ],
+                [
+                    'name' => $itemData['name'],
+                    'description' => $itemData['description'],
+                    'price' => $itemData['price'],
+                    'ingredients' => $itemData['ingredients'],
+                    'allergens' => $itemData['allergens'],
+                    'preparation_time' => $itemData['preparation_time'],
+                    'sort_order' => $index + 1,
+                    'is_available' => true,
+                    'is_featured' => $itemData['is_featured'] ?? false,
+                ]
+            );
         }
     }
 }

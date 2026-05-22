@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SuperAdminSeeder::class,
             RestaurantSeeder::class,
+            MenuSeeder::class,
         ]);
     }
 }
