@@ -25,8 +25,12 @@ Route::get('/', function () {
         
         if ($user->isSuperAdmin()) {
             return redirect()->route('super-admin.dashboard');
-        } elseif ($user->restaurant && $user->restaurant->is_verified) {
-            return redirect()->route('restaurant.admin.dashboard.path');
+        } elseif ($user->isAdmin() && $user->restaurant && $user->restaurant->is_verified) {
+            return redirect()->route('restaurant.admin.dashboard.path', $user->restaurant->slug);
+        } elseif ($user->isWaiter() && $user->restaurant && $user->restaurant->is_verified) {
+            return redirect()->route('restaurant.pos.dashboard.path', $user->restaurant->slug);
+        } elseif ($user->isChef() && $user->restaurant && $user->restaurant->is_verified) {
+            return redirect()->route('restaurant.kitchen.dashboard.path', $user->restaurant->slug);
         } elseif ($user->restaurant && !$user->restaurant->is_verified) {
             return redirect()->route('onboarding.pending');
         } else {

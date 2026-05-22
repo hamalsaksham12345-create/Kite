@@ -24,7 +24,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center space-x-8">
-                        <a href="{{ route('admin.menu-items.index', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                        <a href="{{ route('admin.path.menu-items.index', $currentRestaurant->slug) }}" 
                            class="text-lg font-bold text-gray-900 hover:text-emerald-600">
                             ← Back to Menu Items
                         </a>
@@ -47,7 +47,7 @@
                             <h3 class="text-lg font-black text-yellow-800">No Categories Available</h3>
                             <p class="text-sm text-yellow-700 mt-1">You need to create at least one category before adding menu items.</p>
                             <div class="mt-4">
-                                <a href="{{ route('admin.categories.create', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                                <a href="{{ route('admin.path.categories.create', $currentRestaurant->slug) }}" 
                                    class="bg-yellow-600 hover:bg-yellow-700 text-white font-black py-2 px-4 border-2 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                                     Create Category First
                                 </a>
@@ -62,7 +62,7 @@
                     <div class="bg-white border-4 border-black hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                         <div class="p-8">
                             <h2 class="text-2xl font-black text-black mb-6">Add New Menu Item</h2>
-                            <form action="{{ route('admin.menu-items.store', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                            <form action="{{ route('admin.path.menu-items.store', $currentRestaurant->slug) }}" 
                                   method="POST" 
                                   enctype="multipart/form-data" 
                                   class="space-y-6"
@@ -122,7 +122,7 @@
 
                                 <!-- Price -->
                                 <div>
-                                    <label for="price" class="block text-lg font-black text-black mb-3">Price ($)</label>
+                                    <label for="price" class="block text-lg font-black text-black mb-3">Price (Rs)</label>
                                     <input id="price" 
                                            name="price" 
                                            type="number" 
@@ -215,7 +215,7 @@
 
                 <!-- Back Button -->
                 <div class="mt-8 text-center">
-                    <a href="{{ route('admin.menu-items.index', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                    <a href="{{ route('admin.path.menu-items.index', $currentRestaurant->slug) }}" 
                        class="bg-gray-200 hover:bg-gray-300 text-black font-black py-3 px-6 border-4 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                         ← Back to Menu Items
                     </a>

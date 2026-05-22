@@ -27,18 +27,18 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center space-x-8">
-                        <a href="{{ route('restaurant.admin.dashboard', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                        <a href="{{ route('restaurant.admin.dashboard.path', $currentRestaurant->slug) }}" 
                            class="text-lg font-bold text-gray-900 hover:text-emerald-600">
                             ← Dashboard
                         </a>
                         <h1 class="text-2xl font-black text-black">Menu Items</h1>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <a href="{{ route('admin.categories.index', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                        <a href="{{ route('admin.path.categories.index', $currentRestaurant->slug) }}" 
                            class="bg-gray-200 hover:bg-gray-300 text-black font-black py-2 px-4 border-2 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                             Manage Categories
                         </a>
-                        <a href="{{ route('admin.menu-items.create', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                        <a href="{{ route('admin.path.menu-items.create', $currentRestaurant->slug) }}" 
                            class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2 px-4 border-2 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                             + Add Menu Item
                         </a>
@@ -125,12 +125,12 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex flex-wrap gap-2">
-                                            <a href="{{ route('admin.menu-items.edit', ['restaurant_slug' => $currentRestaurant->slug, 'menuItem' => $item]) }}" 
+                                            <a href="{{ route('admin.path.menu-items.edit', [$currentRestaurant->slug, $item]) }}" 
                                                class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-black py-1 px-2 border border-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                                                 Edit
                                             </a>
                                             
-                                            <form action="{{ route('admin.menu-items.toggle-availability', ['restaurant_slug' => $currentRestaurant->slug, 'menuItem' => $item]) }}" 
+                                            <form action="{{ route('admin.path.menu-items.toggle-availability', [$currentRestaurant->slug, $item]) }}" 
                                                   method="POST" class="inline">
                                                 @csrf
                                                 @method('PATCH')
@@ -140,7 +140,7 @@
                                                 </button>
                                             </form>
                                             
-                                            <form action="{{ route('admin.menu-items.toggle-featured', ['restaurant_slug' => $currentRestaurant->slug, 'menuItem' => $item]) }}" 
+                                            <form action="{{ route('admin.path.menu-items.toggle-featured', [$currentRestaurant->slug, $item]) }}" 
                                                   method="POST" class="inline">
                                                 @csrf
                                                 @method('PATCH')
@@ -150,7 +150,7 @@
                                                 </button>
                                             </form>
                                             
-                                            <form action="{{ route('admin.menu-items.destroy', ['restaurant_slug' => $currentRestaurant->slug, 'menuItem' => $item]) }}" 
+                                            <form action="{{ route('admin.path.menu-items.destroy', [$currentRestaurant->slug, $item]) }}" 
                                                   method="POST" 
                                                   onsubmit="return confirm('Are you sure you want to delete this menu item?')"
                                                   class="inline">
@@ -176,14 +176,14 @@
                         <h3 class="text-xl font-black text-black mb-2">No Menu Items Yet</h3>
                         <p class="text-gray-600 mb-6">Start building your menu by adding your first item.</p>
                         @if($categories->count() > 0)
-                            <a href="{{ route('admin.menu-items.create', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                            <a href="{{ route('admin.path.menu-items.create', $currentRestaurant->slug) }}" 
                                class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 px-6 border-2 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                                 Add First Menu Item
                             </a>
                         @else
                             <div class="space-y-4">
                                 <p class="text-sm text-gray-500">You need to create categories first.</p>
-                                <a href="{{ route('admin.categories.create', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                                <a href="{{ route('admin.path.categories.create', $currentRestaurant->slug) }}" 
                                    class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 px-6 border-2 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                                     Create Categories First
                                 </a>

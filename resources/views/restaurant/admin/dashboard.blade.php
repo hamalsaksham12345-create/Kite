@@ -93,12 +93,12 @@
                     <!-- Links -->
                     <div class="p-6 space-y-4">
                         <!-- Categories Link -->
-                        <a href="{{ route('admin.categories.index', $currentRestaurant->slug) }}" class="block w-full px-6 py-4 bg-blue-600 border-4 border-black text-white font-black text-center uppercase hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                        <a href="{{ route('admin.path.categories.index', $currentRestaurant->slug) }}" class="block w-full px-6 py-4 bg-blue-600 border-4 border-black text-white font-black text-center uppercase hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                             Manage Categories
                         </a>
 
                         <!-- Menu Items Link -->
-                        <a href="{{ route('admin.menu-items.index', $currentRestaurant->slug) }}" class="block w-full px-6 py-4 bg-emerald-600 border-4 border-black text-white font-black text-center uppercase hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                        <a href="{{ route('admin.path.menu-items.index', $currentRestaurant->slug) }}" class="block w-full px-6 py-4 bg-emerald-600 border-4 border-black text-white font-black text-center uppercase hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                             Manage Menu Items
                         </a>
 

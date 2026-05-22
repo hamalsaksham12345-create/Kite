@@ -27,14 +27,14 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center space-x-8">
-                        <a href="{{ route('restaurant.admin.dashboard', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                        <a href="{{ route('restaurant.admin.dashboard.path', $currentRestaurant->slug) }}" 
                            class="text-lg font-bold text-gray-900 hover:text-emerald-600">
                             ← Dashboard
                         </a>
                         <h1 class="text-2xl font-black text-black">Menu Categories</h1>
                     </div>
                     <div class="flex items-center">
-                        <a href="{{ route('admin.categories.create', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                        <a href="{{ route('admin.path.categories.create', $currentRestaurant->slug) }}" 
                            class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2 px-4 border-2 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                             + Add Category
                         </a>
@@ -119,12 +119,12 @@
 
                                 <!-- Action Buttons -->
                                 <div class="flex flex-wrap gap-2">
-                                    <a href="{{ route('admin.categories.edit', ['restaurant_slug' => $currentRestaurant->slug, 'category' => $category]) }}" 
+                                    <a href="{{ route('admin.path.categories.edit', [$currentRestaurant->slug, $category]) }}" 
                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black py-2 px-3 border border-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 text-center">
                                         Edit
                                     </a>
                                     
-                                    <form action="{{ route('admin.categories.toggle-status', ['restaurant_slug' => $currentRestaurant->slug, 'category' => $category]) }}" 
+                                    <form action="{{ route('admin.path.categories.toggle-status', [$currentRestaurant->slug, $category]) }}" 
                                           method="POST" class="flex-1">
                                         @csrf
                                         @method('PATCH')
@@ -134,7 +134,7 @@
                                         </button>
                                     </form>
                                     
-                                    <form action="{{ route('admin.categories.destroy', ['restaurant_slug' => $currentRestaurant->slug, 'category' => $category]) }}" 
+                                    <form action="{{ route('admin.path.categories.destroy', [$currentRestaurant->slug, $category]) }}" 
                                           method="POST" 
                                           onsubmit="return confirm('Are you sure you want to delete this category?')"
                                           class="flex-1">
@@ -157,7 +157,7 @@
                         <div class="text-6xl mb-4">🍽️</div>
                         <h3 class="text-xl font-black text-black mb-2">No Categories Yet</h3>
                         <p class="text-gray-600 mb-6">Start organizing your menu by creating your first category.</p>
-                        <a href="{{ route('admin.categories.create', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                        <a href="{{ route('admin.path.categories.create', $currentRestaurant->slug) }}" 
                            class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 px-6 border-2 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                             Create First Category
                         </a>

@@ -24,7 +24,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center space-x-8">
-                        <a href="{{ route('admin.categories.index', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                        <a href="{{ route('admin.path.categories.index', $currentRestaurant->slug) }}" 
                            class="text-lg font-bold text-gray-900 hover:text-emerald-600">
                             ← Back to Categories
                         </a>
@@ -37,7 +37,7 @@
         <div class="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <div class="bg-white border-2 border-black hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                 <div class="p-8">
-                    <form action="{{ route('admin.categories.store', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                    <form action="{{ route('admin.path.categories.store', $currentRestaurant->slug) }}" 
                           method="POST" 
                           enctype="multipart/form-data" 
                           class="space-y-6">
@@ -120,7 +120,7 @@
                                     class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 px-6 border-2 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                                 Create Category
                             </button>
-                            <a href="{{ route('admin.categories.index', ['restaurant_slug' => $currentRestaurant->slug]) }}" 
+                            <a href="{{ route('admin.path.categories.index', $currentRestaurant->slug) }}" 
                                class="flex-1 bg-gray-200 hover:bg-gray-300 text-black font-black py-4 px-6 border-2 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 text-center">
                                 Cancel
                             </a>

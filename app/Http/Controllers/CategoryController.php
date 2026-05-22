@@ -9,11 +9,6 @@ use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth', 'role:admin']);
-    }
-
     /**
      * Display a listing of categories
      */
@@ -65,7 +60,7 @@ class CategoryController extends Controller
         $category = Category::create($validated);
 
         return redirect()
-            ->route('admin.categories.index')
+            ->route('admin.path.categories.index', auth()->user()->restaurant->slug)
             ->with('success', 'Category created successfully!');
     }
 
@@ -114,7 +109,7 @@ class CategoryController extends Controller
         $category->update($validated);
 
         return redirect()
-            ->route('admin.categories.index')
+            ->route('admin.path.categories.index', auth()->user()->restaurant->slug)
             ->with('success', 'Category updated successfully!');
     }
 
@@ -126,7 +121,7 @@ class CategoryController extends Controller
         // Check if category has menu items
         if ($category->menuItems()->count() > 0) {
             return redirect()
-                ->route('admin.categories.index')
+                ->route('admin.path.categories.index', auth()->user()->restaurant->slug)
                 ->with('error', 'Cannot delete category with menu items. Please move or delete the items first.');
         }
 
@@ -138,7 +133,7 @@ class CategoryController extends Controller
         $category->delete();
 
         return redirect()
-            ->route('admin.categories.index')
+            ->route('admin.path.categories.index', auth()->user()->restaurant->slug)
             ->with('success', 'Category deleted successfully!');
     }
 
@@ -155,7 +150,7 @@ class CategoryController extends Controller
         $status = $category->is_active ? 'activated' : 'deactivated';
         
         return redirect()
-            ->route('admin.categories.index')
+            ->route('admin.path.categories.index', auth()->user()->restaurant->slug)
             ->with('success', "Category {$status} successfully!");
     }
 }

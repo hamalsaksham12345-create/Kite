@@ -10,11 +10,6 @@ use Illuminate\Validation\Rule;
 
 class MenuItemController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth', 'role:admin']);
-    }
-
     /**
      * Display a listing of menu items
      */
@@ -92,7 +87,7 @@ class MenuItemController extends Controller
         $menuItem = MenuItem::create($validated);
 
         return redirect()
-            ->route('admin.menu-items.index')
+            ->route('admin.path.menu-items.index', auth()->user()->restaurant->slug)
             ->with('success', 'Menu item created successfully!');
     }
 
@@ -165,7 +160,7 @@ class MenuItemController extends Controller
         $menuItem->update($validated);
 
         return redirect()
-            ->route('admin.menu-items.index')
+            ->route('admin.path.menu-items.index', auth()->user()->restaurant->slug)
             ->with('success', 'Menu item updated successfully!');
     }
 
@@ -182,7 +177,7 @@ class MenuItemController extends Controller
         $menuItem->delete();
 
         return redirect()
-            ->route('admin.menu-items.index')
+            ->route('admin.path.menu-items.index', auth()->user()->restaurant->slug)
             ->with('success', 'Menu item deleted successfully!');
     }
 
@@ -199,7 +194,7 @@ class MenuItemController extends Controller
         $status = $menuItem->is_available ? 'available' : 'out of stock';
         
         return redirect()
-            ->route('admin.menu-items.index')
+            ->route('admin.path.menu-items.index', auth()->user()->restaurant->slug)
             ->with('success', "Menu item marked as {$status}!");
     }
 
@@ -216,7 +211,7 @@ class MenuItemController extends Controller
         $status = $menuItem->is_featured ? 'featured' : 'not featured';
         
         return redirect()
-            ->route('admin.menu-items.index')
+            ->route('admin.path.menu-items.index', auth()->user()->restaurant->slug)
             ->with('success', "Menu item marked as {$status}!");
     }
 }
