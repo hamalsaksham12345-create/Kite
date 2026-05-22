@@ -53,6 +53,11 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
+    public function isManager(): bool
+    {
+        return $this->role === 'manager';
+    }
+
     public function isWaiter(): bool
     {
         return $this->role === 'waiter';
@@ -61,5 +66,10 @@ class User extends Authenticatable
     public function isChef(): bool
     {
         return $this->role === 'chef';
+    }
+
+    public function isCashier(): bool
+    {
+        return $this->role === 'cashier';
     }
 }

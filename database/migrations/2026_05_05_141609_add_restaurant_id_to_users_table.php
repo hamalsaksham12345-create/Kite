@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('restaurant_id')->nullable()->constrained()->onDelete('cascade');
-            $table->enum('role', ['super_admin', 'admin', 'waiter', 'chef'])->default('waiter');
+            $table->enum('role', ['super_admin', 'admin', 'manager', 'waiter', 'chef', 'cashier'])->default('waiter');
             $table->boolean('is_active')->default(true);
         });
     }
