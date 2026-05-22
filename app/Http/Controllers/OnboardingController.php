@@ -84,7 +84,46 @@ class OnboardingController extends Controller
             'subscription_plan' => $validated['plan'],
             'subscription_amount' => $selectedPlan['price'],
             'subscription_expires_at' => Carbon::now()->addMonths($selectedPlan['duration']),
+            'primary_color' => '#10b981', // Default green
+            'secondary_color' => '#059669', // Darker green
         ]);
+
+        // Initialize restaurant settings with defaults
+        \App\Models\RestaurantSetting::firstOrCreate(
+            ['restaurant_id' => $restaurant->id],
+            [
+                'currency' => 'NPR',
+                'timezone' => 'Asia/Kathmandu',
+                'enable_online_ordering' => true,
+                'enable_table_reservations' => true,
+                'enable_delivery' => false,
+                'order_preparation_time' => 30,
+                'delivery_charge' => 0,
+                'tax_percentage' => 0,
+                'contact_email' => $restaurant->email,
+                'contact_phone' => $restaurant->phone,
+                'address' => $restaurant->address,
+            ]
+        );
+
+        // Initialize subscription record
+        \App\Models\Subscription::firstOrCreate(
+            ['restaurant_id' => $restaurant->id],
+            [
+                'plan_name' => $validated['plan'],
+                'plan_price' => $selectedPlan['price'],
+                'billing_cycle' => $validated['plan'],
+                'status' => 'active',
+                'started_at' => now(),
+                'expires_at' => Carbon::now()->addMonths($selectedPlan['duration']),
+                'max_users' => 10,
+                'max_menu_items' => 100,
+                'max_tables' => 20,
+                'has_analytics' => true,
+                'has_delivery' => false,
+                'has_loyalty_program' => false,
+            ]
+        );
 
         // In a real app, you would process payment here
         // For now, we'll just redirect to pending verification
