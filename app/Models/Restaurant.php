@@ -86,6 +86,26 @@ class Restaurant extends Model
         return $this->hasMany(Order::class);
     }
 
+    public function tables(): HasMany
+    {
+        return $this->hasMany(Table::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function settings()
+    {
+        return $this->hasOne(RestaurantSetting::class);
+    }
+
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class);
+    }
+
     public function getRouteKeyName(): string
     {
         return 'slug';
