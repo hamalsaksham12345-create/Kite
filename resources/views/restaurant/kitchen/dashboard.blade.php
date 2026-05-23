@@ -4,9 +4,18 @@
 <div class="bg-white min-h-screen" x-data="kdsApp()" x-init="init()">
     <!-- Header -->
     <div class="bg-black text-white p-8 border-b-4 border-black">
-        <div class="max-w-7xl mx-auto">
-            <h1 class="text-5xl font-black mb-2">Kitchen Display System</h1>
-            <p class="text-lg font-bold">{{ $currentRestaurant->name }}</p>
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-5xl font-black mb-2">Kitchen Display System</h1>
+                <p class="text-lg font-bold">{{ $currentRestaurant->name }}</p>
+            </div>
+            <div class="text-right">
+                <p class="text-sm font-bold mb-2">Connection Status</p>
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full" :class="isConnected ? 'bg-emerald-500' : 'bg-red-500'"></div>
+                    <p class="font-black" x-text="isConnected ? 'Connected' : 'Disconnected'"></p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -22,7 +31,7 @@
 
                 <div class="space-y-4">
                     <template x-for="order in pendingOrders" :key="order.id">
-                        <div class="bg-yellow-50 border-4 border-black p-6 hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                        <div class="bg-yellow-50 border-4 border-black p-6 hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 animate-pulse">
                             <!-- Order Header -->
                             <div class="mb-4">
                                 <p class="text-sm font-black text-gray-600 uppercase mb-1">Table</p>
@@ -162,6 +171,8 @@
     </div>
 </div>
 
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.15.1/dist/echo.iife.js"></script>
 <script>
     function kdsApp() {
         return {
@@ -169,11 +180,62 @@
             pendingOrders: [],
             preparingOrders: [],
             readyOrders: [],
+            isConnected: false,
+            restaurantId: {{ $currentRestaurant->id }},
 
             init() {
                 this.loadOrders();
-                // Refresh orders every 3 seconds for real-time updates
-                setInterval(() => this.loadOrders(), 3000);
+                this.setupWebSocket();
+                // Fallback: refresh orders every 5 seconds
+                setInterval(() => this.loadOrders(), 5000);
+            },
+
+            setupWebSocket() {
+                // Check if Echo is available
+                if (typeof window.Echo === 'undefined') {
+                    console.warn('Laravel Echo not available, using polling only');
+                    return;
+                }
+
+                try {
+                    // Subscribe to restaurant channel
+                    window.Echo.private(`restaurant.${this.restaurantId}`)
+                        .listen('OrderStatusUpdated', (event) => {
+                            console.log('Order status updated:', event);
+                            this.handleOrderUpdate(event);
+                            this.isConnected = true;
+                        })
+                        .error((error) => {
+                            console.error('Channel error:', error);
+                            this.isConnected = false;
+                        });
+                } catch (error) {
+                    console.error('WebSocket setup error:', error);
+                    this.isConnected = false;
+                }
+            },
+
+            handleOrderUpdate(event) {
+                // Find and update the order in the list
+                const orderIndex = this.orders.findIndex(o => o.id === event.order_id);
+                
+                if (orderIndex !== -1) {
+                    // Update existing order
+                    this.orders[orderIndex].status = event.status;
+                    this.orders[orderIndex].updated_at = event.updated_at;
+                } else {
+                    // Add new order
+                    this.orders.unshift({
+                        id: event.order_id,
+                        table_number: event.table_number,
+                        status: event.status,
+                        total_price: event.total_price,
+                        created_at: event.created_at,
+                        items: event.items,
+                    });
+                }
+
+                this.categorizeOrders();
             },
 
             loadOrders() {
@@ -183,9 +245,13 @@
                         if (data.success) {
                             this.orders = data.orders;
                             this.categorizeOrders();
+                            this.isConnected = true;
                         }
                     })
-                    .catch(error => console.error('Error loading orders:', error));
+                    .catch(error => {
+                        console.error('Error loading orders:', error);
+                        this.isConnected = false;
+                    });
             },
 
             categorizeOrders() {
@@ -211,4 +277,6 @@
         }
     }
 </script>
+@endpush
+
 @endsection

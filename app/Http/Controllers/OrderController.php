@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderStatusUpdated;
 use App\Models\Order;
 use App\Models\MenuItem;
 use App\Models\Restaurant;
@@ -70,6 +71,9 @@ class OrderController extends Controller
                 return $order;
             });
 
+            // Dispatch event for real-time updates
+            OrderStatusUpdated::dispatch($order, 'created');
+
             // Return success response with order details
             return response()->json([
                 'success' => true,
@@ -126,7 +130,11 @@ class OrderController extends Controller
             ], 403);
         }
 
+        $previousStatus = $order->status;
         $order->update(['status' => 'preparing']);
+
+        // Dispatch event for real-time updates
+        OrderStatusUpdated::dispatch($order, $previousStatus);
 
         return response()->json([
             'success' => true,
@@ -151,7 +159,11 @@ class OrderController extends Controller
             ], 403);
         }
 
+        $previousStatus = $order->status;
         $order->update(['status' => 'ready']);
+
+        // Dispatch event for real-time updates
+        OrderStatusUpdated::dispatch($order, $previousStatus);
 
         return response()->json([
             'success' => true,
@@ -176,7 +188,11 @@ class OrderController extends Controller
             ], 403);
         }
 
+        $previousStatus = $order->status;
         $order->update(['status' => 'completed']);
+
+        // Dispatch event for real-time updates
+        OrderStatusUpdated::dispatch($order, $previousStatus);
 
         return response()->json([
             'success' => true,
@@ -220,3 +236,4 @@ class OrderController extends Controller
         ]);
     }
 }
+
