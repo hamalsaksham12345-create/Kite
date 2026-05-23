@@ -94,7 +94,7 @@ class Invoice extends Model
     /**
      * Mark invoice as paid
      */
-    public function markAsPaid(string $paymentMethod = null, string $transactionId = null): void
+    public function markAsPaid(?string $paymentMethod = null, ?string $transactionId = null): void
     {
         $this->update([
             'payment_status' => 'paid',
