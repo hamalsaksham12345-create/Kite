@@ -244,30 +244,63 @@ This document outlines all core modules in the Kite restaurant SaaS platform and
 
 ## 8. Billing/POS
 
-**Status:** ✅ PARTIAL
+**Status:** ✅ IMPLEMENTED (with Full Billing System)
 
 ### Features:
 - POS dashboard with table matrix
 - Order ticket stream
 - Order delivery marking
-- Payment model created
-- Database structure ready
+- Invoice generation with automatic numbering
+- Tax/VAT calculation (configurable per restaurant)
+- Discount code system (percentage and fixed)
+- Service charge support
+- Multiple payment methods (cash, card, online)
+- Payment status tracking (unpaid, paid, partial, refunded)
+- Receipt generation (JSON format)
+- Unpaid orders tracking
+- Payment summary reports
+- Discount code management (CRUD)
+- Discount validation and usage tracking
 
 ### Files:
 - `resources/views/restaurant/pos/dashboard.blade.php`
 - `app/Models/Payment.php`
-- `database/migrations/2026_05_22_000002_create_payments_table.php`
+- `app/Models/Invoice.php`
+- `app/Models/DiscountCode.php`
+- `app/Services/BillingService.php`
+- `app/Http/Controllers/BillingController.php`
+- `app/Http/Controllers/DiscountCodeController.php`
+- `database/migrations/2026_05_23_000000_add_billing_fields_to_orders_table.php`
+- `database/migrations/2026_05_23_000001_create_discount_codes_table.php`
+- `database/migrations/2026_05_23_000002_create_invoices_table.php`
+- `database/migrations/2026_05_23_000003_add_service_charge_to_restaurant_settings.php`
 
 ### Routes:
 - `GET /{slug}/pos` - POS dashboard
+- `GET /{slug}/admin/billing` - Billing dashboard
+- `GET /{slug}/admin/billing/summary` - Payment summary
+- `GET /{slug}/admin/billing/unpaid` - Unpaid orders
+- `GET /{slug}/admin/discount-codes` - List discount codes
+- `POST /{slug}/admin/discount-codes` - Create discount code
+- `PATCH /{slug}/admin/discount-codes/{code}/toggle-status` - Toggle status
+- `POST /{slug}/admin/discount-codes/validate` - Validate code
+- `POST /{slug}/orders/{order}/apply-discount` - Apply discount
+- `POST /{slug}/orders/{order}/generate-invoice` - Generate invoice
+- `POST /{slug}/orders/{order}/process-payment` - Process payment
 
-### TODO:
-- [ ] Payment processing
-- [ ] Multiple payment methods (cash, card, online)
-- [ ] Invoice generation
-- [ ] Receipt printing
+### Documentation:
+- `BILLING_SYSTEM.md` - Complete billing system documentation
+- `BILLING_SUMMARY.md` - Implementation summary
+
+### Future Enhancements:
+- [ ] PDF invoice generation
+- [ ] Email receipt delivery
+- [ ] eSewa integration
+- [ ] Khalti integration
+- [ ] COD support
 - [ ] Refund management
-- [ ] Payment reconciliation
+- [ ] Partial payments
+- [ ] Recurring invoices
 
 ---
 
@@ -341,8 +374,8 @@ This document outlines all core modules in the Kite restaurant SaaS platform and
 | Menu Management | ✅ Complete | High |
 | Table Management | ✅ Complete | High |
 | Order Management | ✅ Complete | High |
-| Kitchen Display | ✅ Complete | High |
-| Billing/POS | ⚠️ Partial | High |
+| Kitchen Display | ✅ Complete (Real-Time) | High |
+| Billing/POS | ✅ Complete | High |
 | Analytics | ⚠️ Partial | Medium |
 | Subscription System | ⚠️ Partial | High |
 
