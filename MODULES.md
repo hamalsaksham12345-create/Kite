@@ -207,22 +207,38 @@ This document outlines all core modules in the Kite restaurant SaaS platform and
 
 ## 7. Kitchen Display System (KDS)
 
-**Status:** ✅ IMPLEMENTED
+**Status:** ✅ IMPLEMENTED (with Real-Time Updates)
 
 ### Features:
-- Real-time order display
-- Kanban board layout (New Orders, In Preparation, Food Ready)
+- Real-time order display with Laravel Broadcasting
+- Kanban board layout (New Orders/pending, In Preparation/preparing, Food Ready/ready)
 - Order status updates
 - Time tracking for orders
 - Item quantity display
-- Auto-refresh every 3-5 seconds
+- Auto-refresh every 5 seconds (fallback)
+- Connection status indicator
+- Instant order card movement between columns
+- Pulse animation for new orders
+- WebSocket support (database driver for local, Pusher/Redis for production)
 
 ### Files:
 - `resources/views/restaurant/kitchen/dashboard.blade.php`
 - `app/Http/Controllers/OrderController.php`
+- `app/Events/OrderStatusUpdated.php`
+- `routes/channels.php`
+- `config/broadcasting.php`
+- `database/migrations/2026_05_22_000005_create_broadcasts_table.php`
 
 ### Routes:
 - `GET /{slug}/kitchen` - Kitchen dashboard
+
+### Broadcasting:
+- Event: `OrderStatusUpdated`
+- Channel: `restaurant.{restaurantId}` (private)
+- Driver: Database (local), Pusher/Redis (production)
+
+### Documentation:
+- `REALTIME_KDS.md` - Complete real-time system documentation
 
 ---
 
