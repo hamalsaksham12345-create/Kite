@@ -5,6 +5,8 @@ use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\BillingController;
+use App\Http\Controllers\DiscountCodeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\RegistrationController;
@@ -251,6 +253,29 @@ Route::middleware(['restaurant.context'])->group(function () {
                 ->name('admin.path.tables.change-status');
             Route::get('admin/tables/{table}/qr', [\App\Http\Controllers\TableController::class, 'generateQR'])
                 ->name('admin.path.tables.qr');
+            
+            // Billing & Payments
+            Route::get('/admin/billing', [BillingController::class, 'dashboard'])->name('admin.path.billing.dashboard');
+            Route::get('/admin/billing/summary', [BillingController::class, 'paymentSummary'])->name('admin.path.billing.summary');
+            Route::get('/admin/billing/unpaid', [BillingController::class, 'unpaidOrders'])->name('admin.path.billing.unpaid');
+            
+            // Discount Codes
+            Route::resource('admin/discount-codes', DiscountCodeController::class, ['as' => 'admin.path']);
+            Route::patch('admin/discount-codes/{discountCode}/toggle-status', [DiscountCodeController::class, 'toggleStatus'])
+                ->name('admin.path.discount-codes.toggle-status');
+            Route::post('admin/discount-codes/validate', [DiscountCodeController::class, 'validate'])
+                ->name('admin.path.discount-codes.validate');
+            
+            // Invoice Management
+            Route::get('/admin/invoices/{invoice}', [BillingController::class, 'viewInvoice'])->name('admin.path.invoices.view');
+            Route::get('/admin/invoices/{invoice}/download', [BillingController::class, 'downloadInvoice'])->name('admin.path.invoices.download');
+        });
+        
+        // Billing API Routes (for POS/Waiter)
+        Route::middleware(['auth', 'restaurant.verified'])->group(function () {
+            Route::post('/orders/{order}/apply-discount', [BillingController::class, 'applyDiscount'])->name('orders.apply-discount.path');
+            Route::post('/orders/{order}/generate-invoice', [BillingController::class, 'generateInvoice'])->name('orders.generate-invoice.path');
+            Route::post('/orders/{order}/process-payment', [BillingController::class, 'processPayment'])->name('orders.process-payment.path');
         });
         
         // ====================================================================

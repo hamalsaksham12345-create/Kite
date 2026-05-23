@@ -16,6 +16,7 @@ class RestaurantSetting extends Model
         'order_preparation_time',
         'delivery_charge',
         'tax_percentage',
+        'service_charge_percentage',
         'business_hours',
         'contact_email',
         'contact_phone',
@@ -30,6 +31,7 @@ class RestaurantSetting extends Model
         'order_preparation_time' => 'integer',
         'delivery_charge' => 'decimal:2',
         'tax_percentage' => 'decimal:2',
+        'service_charge_percentage' => 'decimal:2',
         'business_hours' => 'array',
     ];
 
