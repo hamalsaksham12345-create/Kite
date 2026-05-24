@@ -9,6 +9,7 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\DiscountCodeController;
 use App\Http\Controllers\WebsiteBuilderController;
 use App\Http\Controllers\PublicWebsiteController;
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\RegistrationController;
@@ -289,6 +290,14 @@ Route::middleware(['restaurant.context'])->group(function () {
             Route::post('/admin/website-builder/publish', [WebsiteBuilderController::class, 'publish'])->name('admin.path.website-builder.publish');
             Route::post('/admin/website-builder/unpublish', [WebsiteBuilderController::class, 'unpublish'])->name('admin.path.website-builder.unpublish');
             Route::get('/admin/website-builder/preview', [WebsiteBuilderController::class, 'preview'])->name('admin.path.website-builder.preview');
+            
+            // Analytics Dashboard
+            Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('admin.path.analytics.dashboard');
+            Route::get('/admin/analytics/sales', [AnalyticsController::class, 'sales'])->name('admin.path.analytics.sales');
+            Route::get('/admin/analytics/menu', [AnalyticsController::class, 'menu'])->name('admin.path.analytics.menu');
+            Route::get('/admin/analytics/orders', [AnalyticsController::class, 'orders'])->name('admin.path.analytics.orders');
+            Route::get('/admin/analytics/staff', [AnalyticsController::class, 'staff'])->name('admin.path.analytics.staff');
+            Route::get('/admin/analytics/export', [AnalyticsController::class, 'export'])->name('admin.path.analytics.export');
         });
         
         // Billing API Routes (for POS/Waiter)
