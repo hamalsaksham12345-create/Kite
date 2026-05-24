@@ -106,6 +106,11 @@
                         <a href="{{ route('staff.register.form', $currentRestaurant->slug) }}" class="block w-full px-6 py-4 bg-purple-600 border-4 border-black text-white font-black text-center uppercase hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                             Invite Staff
                         </a>
+
+                        <!-- Website Builder Link -->
+                        <a href="{{ route('admin.path.website-builder.index', $currentRestaurant->slug) }}" class="block w-full px-6 py-4 bg-pink-600 border-4 border-black text-white font-black text-center uppercase hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                            Website Builder
+                        </a>
                     </div>
                 </div>
 

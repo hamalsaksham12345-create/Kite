@@ -106,6 +106,16 @@ class Restaurant extends Model
         return $this->hasOne(Subscription::class);
     }
 
+    public function websiteSetting()
+    {
+        return $this->hasOne(WebsiteSetting::class);
+    }
+
+    public function websiteSections(): HasMany
+    {
+        return $this->hasMany(WebsiteSection::class);
+    }
+
     public function getRouteKeyName(): string
     {
         return 'slug';

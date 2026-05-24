@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             SuperAdminSeeder::class,
             RestaurantSeeder::class,
             MenuSeeder::class,
+            WebsiteSettingsSeeder::class,
         ]);
     }
 }

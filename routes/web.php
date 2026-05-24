@@ -7,6 +7,8 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\DiscountCodeController;
+use App\Http\Controllers\WebsiteBuilderController;
+use App\Http\Controllers\PublicWebsiteController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\RegistrationController;
@@ -269,6 +271,24 @@ Route::middleware(['restaurant.context'])->group(function () {
             // Invoice Management
             Route::get('/admin/invoices/{invoice}', [BillingController::class, 'viewInvoice'])->name('admin.path.invoices.view');
             Route::get('/admin/invoices/{invoice}/download', [BillingController::class, 'downloadInvoice'])->name('admin.path.invoices.download');
+            
+            // Website Builder
+            Route::get('/admin/website-builder', [WebsiteBuilderController::class, 'index'])->name('admin.path.website-builder.index');
+            Route::get('/admin/website-builder/design', [WebsiteBuilderController::class, 'design'])->name('admin.path.website-builder.design');
+            Route::patch('/admin/website-builder/design', [WebsiteBuilderController::class, 'updateDesign'])->name('admin.path.website-builder.update-design');
+            Route::get('/admin/website-builder/content', [WebsiteBuilderController::class, 'content'])->name('admin.path.website-builder.content');
+            Route::patch('/admin/website-builder/content', [WebsiteBuilderController::class, 'updateContent'])->name('admin.path.website-builder.update-content');
+            Route::get('/admin/website-builder/contact', [WebsiteBuilderController::class, 'contact'])->name('admin.path.website-builder.contact');
+            Route::patch('/admin/website-builder/contact', [WebsiteBuilderController::class, 'updateContact'])->name('admin.path.website-builder.update-contact');
+            Route::get('/admin/website-builder/media', [WebsiteBuilderController::class, 'media'])->name('admin.path.website-builder.media');
+            Route::post('/admin/website-builder/upload-logo', [WebsiteBuilderController::class, 'uploadLogo'])->name('admin.path.website-builder.upload-logo');
+            Route::post('/admin/website-builder/upload-favicon', [WebsiteBuilderController::class, 'uploadFavicon'])->name('admin.path.website-builder.upload-favicon');
+            Route::post('/admin/website-builder/upload-banner', [WebsiteBuilderController::class, 'uploadBanner'])->name('admin.path.website-builder.upload-banner');
+            Route::get('/admin/website-builder/domain', [WebsiteBuilderController::class, 'domain'])->name('admin.path.website-builder.domain');
+            Route::patch('/admin/website-builder/domain', [WebsiteBuilderController::class, 'updateDomain'])->name('admin.path.website-builder.update-domain');
+            Route::post('/admin/website-builder/publish', [WebsiteBuilderController::class, 'publish'])->name('admin.path.website-builder.publish');
+            Route::post('/admin/website-builder/unpublish', [WebsiteBuilderController::class, 'unpublish'])->name('admin.path.website-builder.unpublish');
+            Route::get('/admin/website-builder/preview', [WebsiteBuilderController::class, 'preview'])->name('admin.path.website-builder.preview');
         });
         
         // Billing API Routes (for POS/Waiter)
@@ -301,5 +321,30 @@ Route::middleware(['restaurant.context'])->group(function () {
             // Orders List API
             Route::get('/orders', [OrderController::class, 'getRestaurantOrders'])->name('orders.list.path');
         });
+    });
+});
+
+// ============================================================================
+// PUBLIC WEBSITE ROUTES (Custom Domain & Subdomain)
+// ============================================================================
+
+Route::middleware(['restaurant.context'])->group(function () {
+    
+    // Subdomain routing for public website
+    Route::domain('{restaurant_slug}.kite.test')->group(function () {
+        Route::get('/', [PublicWebsiteController::class, 'index'])->name('website.index');
+        Route::get('/menu', [PublicWebsiteController::class, 'menu'])->name('website.menu');
+        Route::get('/about', [PublicWebsiteController::class, 'about'])->name('website.about');
+        Route::get('/contact', [PublicWebsiteController::class, 'contact'])->name('website.contact');
+        Route::post('/contact', [PublicWebsiteController::class, 'submitContact'])->name('website.contact.submit');
+    });
+    
+    // Path-based routing for public website
+    Route::prefix('{restaurant_slug}')->group(function () {
+        Route::get('/website', [PublicWebsiteController::class, 'index'])->name('website.index.path');
+        Route::get('/website/menu', [PublicWebsiteController::class, 'menu'])->name('website.menu.path');
+        Route::get('/website/about', [PublicWebsiteController::class, 'about'])->name('website.about.path');
+        Route::get('/website/contact', [PublicWebsiteController::class, 'contact'])->name('website.contact.path');
+        Route::post('/website/contact', [PublicWebsiteController::class, 'submitContact'])->name('website.contact.submit.path');
     });
 });
