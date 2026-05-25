@@ -1,164 +1,126 @@
-@extends('layouts.app')
+@extends('layouts.master')
+
+@section('title', 'Contact ' . $restaurant->name)
+@section('description', 'Get in touch with ' . $restaurant->name)
 
 @section('content')
-<style>
-    :root {
-        --color-primary: {{ $websiteSetting->primary_color }};
-        --color-secondary: {{ $websiteSetting->secondary_color }};
-        --color-accent: {{ $websiteSetting->accent_color }};
-        --color-text: {{ $websiteSetting->text_color }};
-        --color-background: {{ $websiteSetting->background_color }};
-        --font-family: '{{ $websiteSetting->font_family }}', sans-serif;
-        --font-heading: '{{ $websiteSetting->heading_font }}', sans-serif;
-    }
+<div class="pt-32 pb-24 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Breadcrumb -->
+        <div class="mb-12">
+            <a href="{{ route('website.index.path', $restaurant->slug) }}" class="text-emerald-700 hover:text-emerald-800 font-semibold">← Back to Home</a>
+        </div>
 
-    body {
-        font-family: var(--font-family);
-        color: var(--color-text);
-        background-color: var(--color-background);
-    }
+        <!-- Header -->
+        <div class="mb-16">
+            <h1 class="text-6xl md:text-7xl font-black text-gray-900 leading-[0.9] mb-8 tracking-tight">
+                Get in <span class="bg-gradient-to-r from-emerald-700 to-emerald-600 bg-clip-text text-transparent">Touch</span>
+            </h1>
+            <p class="text-xl text-gray-600 font-medium">
+                We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            </p>
+        </div>
 
-    h1, h2, h3, h4, h5, h6 {
-        font-family: var(--font-heading);
-    }
-</style>
+        <!-- Contact Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+            <!-- Contact Information -->
+            <div class="space-y-6">
+                <h2 class="text-3xl font-black text-gray-900 mb-8">Contact Information</h2>
 
-<!-- Navigation -->
-<nav class="border-b-4 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-20">
-            <div class="flex items-center gap-4">
-                @if($websiteSetting->logo_path)
-                    <img src="{{ Storage::url($websiteSetting->logo_path) }}" alt="{{ $restaurant->name }}" class="h-12">
+                @if($websiteSetting->phone)
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-xl transition-all">
+                        <p class="text-sm font-semibold text-gray-500 mb-2">PHONE</p>
+                        <a href="tel:{{ $websiteSetting->phone }}" class="text-2xl font-black text-emerald-700 hover:text-emerald-800">{{ $websiteSetting->phone }}</a>
+                    </div>
                 @endif
-                <h1 class="text-2xl font-bold" style="font-family: var(--font-heading);">{{ $restaurant->name }}</h1>
-            </div>
-            <div class="flex gap-6">
-                <a href="{{ route('website.index.path', $restaurant->slug) }}" class="font-bold hover:text-blue-600">Home</a>
-                <a href="{{ route('website.menu.path', $restaurant->slug) }}" class="font-bold hover:text-blue-600">Menu</a>
-            </div>
-        </div>
-    </div>
-</nav>
 
-<!-- Header -->
-<div class="py-12 border-b-4 border-black" style="background-color: var(--color-primary);">
-    <div class="max-w-7xl mx-auto px-4">
-        <h1 class="text-5xl font-bold text-white" style="font-family: var(--font-heading);">Contact Us</h1>
-        <p class="text-white text-lg mt-2">We'd love to hear from you</p>
-    </div>
-</div>
+                @if($websiteSetting->email)
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-xl transition-all">
+                        <p class="text-sm font-semibold text-gray-500 mb-2">EMAIL</p>
+                        <a href="mailto:{{ $websiteSetting->email }}" class="text-2xl font-black text-emerald-700 hover:text-emerald-800 break-all">{{ $websiteSetting->email }}</a>
+                    </div>
+                @endif
 
-<!-- Contact Content -->
-<div class="max-w-7xl mx-auto px-4 py-16">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <!-- Contact Information -->
-        <div>
-            <h2 class="text-3xl font-bold mb-8 pb-4 border-b-4 border-black" style="font-family: var(--font-heading);">Get in Touch</h2>
+                @if($websiteSetting->address)
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-xl transition-all">
+                        <p class="text-sm font-semibold text-gray-500 mb-2">ADDRESS</p>
+                        <p class="text-lg font-bold text-gray-900">{{ $websiteSetting->address }}</p>
+                        @if($websiteSetting->city)
+                            <p class="text-lg font-bold text-gray-900">{{ $websiteSetting->city }}@if($websiteSetting->state), {{ $websiteSetting->state }}@endif</p>
+                        @endif
+                    </div>
+                @endif
 
-            @if($websiteSetting->phone)
-                <div class="mb-8 border-4 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
-                    <p class="font-bold text-lg mb-2">Phone</p>
-                    <a href="tel:{{ $websiteSetting->phone }}" class="text-blue-600 hover:text-blue-800 text-xl font-bold">{{ $websiteSetting->phone }}</a>
-                </div>
-            @endif
-
-            @if($websiteSetting->email)
-                <div class="mb-8 border-4 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
-                    <p class="font-bold text-lg mb-2">Email</p>
-                    <a href="mailto:{{ $websiteSetting->email }}" class="text-blue-600 hover:text-blue-800 text-xl font-bold">{{ $websiteSetting->email }}</a>
-                </div>
-            @endif
-
-            @if($websiteSetting->address)
-                <div class="mb-8 border-4 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
-                    <p class="font-bold text-lg mb-2">Address</p>
-                    <p class="text-gray-700">{{ $websiteSetting->address }}</p>
-                    @if($websiteSetting->city)
-                        <p class="text-gray-700">{{ $websiteSetting->city }}@if($websiteSetting->state), {{ $websiteSetting->state }}@endif @if($websiteSetting->postal_code){{ $websiteSetting->postal_code }}@endif</p>
-                    @endif
-                    @if($websiteSetting->country)
-                        <p class="text-gray-700">{{ $websiteSetting->country }}</p>
-                    @endif
-                </div>
-            @endif
-
-            <!-- Social Media & WhatsApp -->
-            <div class="border-4 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
-                <p class="font-bold text-lg mb-4">Connect With Us</p>
-                <div class="flex flex-wrap gap-3">
-                    @if($websiteSetting->facebook_url)
-                        <a href="{{ $websiteSetting->facebook_url }}" target="_blank" class="px-4 py-2 bg-blue-600 text-white font-bold border-2 border-blue-800 hover:bg-blue-700">
-                            Facebook
-                        </a>
-                    @endif
-                    @if($websiteSetting->instagram_url)
-                        <a href="{{ $websiteSetting->instagram_url }}" target="_blank" class="px-4 py-2 bg-pink-600 text-white font-bold border-2 border-pink-800 hover:bg-pink-700">
-                            Instagram
-                        </a>
-                    @endif
-                    @if($websiteSetting->twitter_url)
-                        <a href="{{ $websiteSetting->twitter_url }}" target="_blank" class="px-4 py-2 bg-blue-400 text-white font-bold border-2 border-blue-600 hover:bg-blue-500">
-                            Twitter
-                        </a>
-                    @endif
-                    @if($websiteSetting->whatsapp_number)
-                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $websiteSetting->whatsapp_number) }}" target="_blank" class="px-4 py-2 bg-green-500 text-white font-bold border-2 border-green-700 hover:bg-green-600">
-                            WhatsApp
-                        </a>
-                    @endif
+                <!-- Social Media & WhatsApp -->
+                <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+                    <p class="text-sm font-semibold text-gray-500 mb-6">CONNECT WITH US</p>
+                    <div class="flex flex-wrap gap-3">
+                        @if($websiteSetting->facebook_url)
+                            <a href="{{ $websiteSetting->facebook_url }}" target="_blank" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors">
+                                Facebook
+                            </a>
+                        @endif
+                        @if($websiteSetting->instagram_url)
+                            <a href="{{ $websiteSetting->instagram_url }}" target="_blank" class="px-6 py-3 bg-pink-600 text-white rounded-xl font-bold hover:bg-pink-700 transition-colors">
+                                Instagram
+                            </a>
+                        @endif
+                        @if($websiteSetting->twitter_url)
+                            <a href="{{ $websiteSetting->twitter_url }}" target="_blank" class="px-6 py-3 bg-blue-400 text-white rounded-xl font-bold hover:bg-blue-500 transition-colors">
+                                Twitter
+                            </a>
+                        @endif
+                        @if($websiteSetting->whatsapp_number)
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $websiteSetting->whatsapp_number) }}" target="_blank" class="px-6 py-3 bg-green-500 text-white rounded-xl font-bold hover:bg-green-600 transition-colors">
+                                💬 WhatsApp
+                            </a>
+                        @endif
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Contact Form -->
-        <div>
-            <h2 class="text-3xl font-bold mb-8 pb-4 border-b-4 border-black" style="font-family: var(--font-heading);">Send us a Message</h2>
+            <!-- Contact Form -->
+            <div>
+                <h2 class="text-3xl font-black text-gray-900 mb-8">Send us a Message</h2>
 
-            <form id="contactForm" class="border-4 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 space-y-4">
-                @csrf
+                <form id="contactForm" class="bg-white rounded-3xl p-10 shadow-sm border border-gray-100 space-y-6">
+                    @csrf
 
-                <div>
-                    <label class="block text-sm font-bold text-gray-900 mb-2">Name</label>
-                    <input type="text" name="name" required class="w-full px-3 py-2 border-2 border-gray-300 font-bold">
-                </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-900 mb-2">Name</label>
+                        <input type="text" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-base">
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-bold text-gray-900 mb-2">Email</label>
-                    <input type="email" name="email" required class="w-full px-3 py-2 border-2 border-gray-300 font-bold">
-                </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-900 mb-2">Email</label>
+                        <input type="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-base">
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-bold text-gray-900 mb-2">Phone (Optional)</label>
-                    <input type="tel" name="phone" class="w-full px-3 py-2 border-2 border-gray-300 font-bold">
-                </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-900 mb-2">Phone (Optional)</label>
+                        <input type="tel" name="phone" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-base">
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-bold text-gray-900 mb-2">Subject</label>
-                    <input type="text" name="subject" required class="w-full px-3 py-2 border-2 border-gray-300 font-bold">
-                </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-900 mb-2">Subject</label>
+                        <input type="text" name="subject" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-base">
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-bold text-gray-900 mb-2">Message</label>
-                    <textarea name="message" required rows="6" class="w-full px-3 py-2 border-2 border-gray-300 font-bold"></textarea>
-                </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-900 mb-2">Message</label>
+                        <textarea name="message" required rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-base"></textarea>
+                    </div>
 
-                <button type="submit" class="w-full px-6 py-3 font-bold text-white border-2 border-black" style="background-color: var(--color-primary);">
-                    Send Message
-                </button>
-            </form>
+                    <button type="submit" class="w-full px-6 py-4 font-bold text-white bg-emerald-700 hover:bg-emerald-800 rounded-2xl transition-all transform hover:scale-105 shadow-lg hover:shadow-xl">
+                        Send Message
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Footer -->
-<footer class="border-t-4 border-black bg-gray-900 text-white py-8 mt-16">
-    <div class="max-w-7xl mx-auto px-4 text-center">
-        <p class="font-bold mb-2">{{ $restaurant->name }}</p>
-        <p class="text-gray-400 text-sm">Powered by Kite Restaurant Management</p>
-    </div>
-</footer>
-
+@push('scripts')
 <script>
 document.getElementById('contactForm').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -180,11 +142,14 @@ document.getElementById('contactForm').addEventListener('submit', async function
         if (result.success) {
             alert(result.message);
             this.reset();
+        } else {
+            alert('Error: ' + (result.message || 'Failed to send message'));
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Error sending message');
+        alert('Error sending message. Please try again.');
     }
 });
 </script>
+@endpush
 @endsection
