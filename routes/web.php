@@ -20,6 +20,16 @@ use App\Http\Controllers\SuperAdmin\PendingController as SuperAdminPendingContro
 use Illuminate\Support\Facades\Route;
 
 // ============================================================================
+// SUBDOMAIN ROUTING - SaaS Multi-Tenant
+// ============================================================================
+
+Route::domain('{restaurant}.kite.test')->group(function () {
+    Route::get('/', function ($restaurant) {
+        return "Restaurant: " . $restaurant;
+    });
+});
+
+// ============================================================================
 // PUBLIC ROUTES
 // ============================================================================
 
