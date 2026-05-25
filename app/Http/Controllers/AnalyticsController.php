@@ -19,9 +19,9 @@ class AnalyticsController extends Controller
     /**
      * Show analytics dashboard
      */
-    public function index(Request $request, Restaurant $restaurant)
+    public function index(Request $request)
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $startDate = $request->query('start_date')
             ? Carbon::createFromFormat('Y-m-d', $request->query('start_date'))
@@ -40,9 +40,9 @@ class AnalyticsController extends Controller
     /**
      * Get sales analytics
      */
-    public function sales(Request $request, Restaurant $restaurant)
+    public function sales(Request $request)
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $startDate = $request->query('start_date')
             ? Carbon::createFromFormat('Y-m-d', $request->query('start_date'))
@@ -66,9 +66,9 @@ class AnalyticsController extends Controller
     /**
      * Get menu analytics
      */
-    public function menu(Request $request, Restaurant $restaurant)
+    public function menu(Request $request)
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $startDate = $request->query('start_date')
             ? Carbon::createFromFormat('Y-m-d', $request->query('start_date'))
@@ -91,9 +91,9 @@ class AnalyticsController extends Controller
     /**
      * Get order analytics
      */
-    public function orders(Request $request, Restaurant $restaurant)
+    public function orders(Request $request)
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $startDate = $request->query('start_date')
             ? Carbon::createFromFormat('Y-m-d', $request->query('start_date'))
@@ -119,9 +119,9 @@ class AnalyticsController extends Controller
     /**
      * Get staff performance analytics
      */
-    public function staff(Request $request, Restaurant $restaurant)
+    public function staff(Request $request)
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $startDate = $request->query('start_date')
             ? Carbon::createFromFormat('Y-m-d', $request->query('start_date'))
@@ -144,9 +144,9 @@ class AnalyticsController extends Controller
     /**
      * Export analytics data as JSON
      */
-    public function export(Request $request, Restaurant $restaurant)
+    public function export(Request $request)
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $startDate = $request->query('start_date')
             ? Carbon::createFromFormat('Y-m-d', $request->query('start_date'))

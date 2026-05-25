@@ -14,9 +14,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Show the website builder dashboard
      */
-    public function index(Restaurant $restaurant)
+    public function index()
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $websiteSetting = $restaurant->websiteSetting ?? WebsiteSetting::create([
             'restaurant_id' => $restaurant->id,
@@ -34,9 +34,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Show the design editor
      */
-    public function design(Restaurant $restaurant)
+    public function design()
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $websiteSetting = $restaurant->websiteSetting ?? WebsiteSetting::create([
             'restaurant_id' => $restaurant->id,
@@ -49,9 +49,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Update website design settings
      */
-    public function updateDesign(Request $request, Restaurant $restaurant)
+    public function updateDesign(Request $request)
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $validated = $request->validate([
             'primary_color' => 'nullable|string|regex:/^#[0-9A-F]{6}$/i',
@@ -80,9 +80,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Show the content editor
      */
-    public function content(Restaurant $restaurant)
+    public function content()
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $websiteSetting = $restaurant->websiteSetting ?? WebsiteSetting::create([
             'restaurant_id' => $restaurant->id,
@@ -99,9 +99,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Update website content
      */
-    public function updateContent(Request $request, Restaurant $restaurant)
+    public function updateContent(Request $request)
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $validated = $request->validate([
             'hero_title' => 'nullable|string|max:255',
@@ -133,9 +133,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Show the contact details editor
      */
-    public function contact(Restaurant $restaurant)
+    public function contact()
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $websiteSetting = $restaurant->websiteSetting ?? WebsiteSetting::create([
             'restaurant_id' => $restaurant->id,
@@ -148,9 +148,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Update contact details
      */
-    public function updateContact(Request $request, Restaurant $restaurant)
+    public function updateContact(Request $request)
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $validated = $request->validate([
             'phone' => 'nullable|string|max:20',
@@ -185,9 +185,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Show the media manager
      */
-    public function media(Restaurant $restaurant)
+    public function media()
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $websiteSetting = $restaurant->websiteSetting ?? WebsiteSetting::create([
             'restaurant_id' => $restaurant->id,
@@ -200,9 +200,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Upload logo
      */
-    public function uploadLogo(Request $request, Restaurant $restaurant)
+    public function uploadLogo(Request $request)
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $request->validate([
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -231,9 +231,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Upload favicon
      */
-    public function uploadFavicon(Request $request, Restaurant $restaurant)
+    public function uploadFavicon(Request $request)
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $request->validate([
             'favicon' => 'required|image|mimes:jpeg,png,jpg,gif,ico|max:1024',
@@ -262,9 +262,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Upload banner
      */
-    public function uploadBanner(Request $request, Restaurant $restaurant)
+    public function uploadBanner(Request $request)
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $request->validate([
             'banner' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
@@ -293,9 +293,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Show domain settings
      */
-    public function domain(Restaurant $restaurant)
+    public function domain()
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $websiteSetting = $restaurant->websiteSetting ?? WebsiteSetting::create([
             'restaurant_id' => $restaurant->id,
@@ -308,9 +308,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Update domain settings
      */
-    public function updateDomain(Request $request, Restaurant $restaurant)
+    public function updateDomain(Request $request)
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $validated = $request->validate([
             'use_custom_domain' => 'boolean',
@@ -335,9 +335,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Publish website
      */
-    public function publish(Restaurant $restaurant)
+    public function publish()
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $websiteSetting = $restaurant->websiteSetting ?? WebsiteSetting::create([
             'restaurant_id' => $restaurant->id,
@@ -356,9 +356,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Unpublish website
      */
-    public function unpublish(Restaurant $restaurant)
+    public function unpublish()
     {
-        $this->authorize('update', $restaurant);
+        $restaurant = auth()->user()->restaurant;
 
         $websiteSetting = $restaurant->websiteSetting;
 
@@ -375,8 +375,9 @@ class WebsiteBuilderController extends Controller
     /**
      * Preview website
      */
-    public function preview(Restaurant $restaurant)
+    public function preview()
     {
+        $restaurant = auth()->user()->restaurant;
         $websiteSetting = $restaurant->websiteSetting;
 
         if (!$websiteSetting) {

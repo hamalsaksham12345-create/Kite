@@ -10,8 +10,9 @@ class PublicWebsiteController extends Controller
     /**
      * Show the public website homepage
      */
-    public function index(Restaurant $restaurant)
+    public function index()
     {
+        $restaurant = view()->shared('restaurant');
         $websiteSetting = $restaurant->websiteSetting;
 
         // Check if website is published
@@ -38,8 +39,9 @@ class PublicWebsiteController extends Controller
     /**
      * Show the menu page
      */
-    public function menu(Restaurant $restaurant)
+    public function menu()
     {
+        $restaurant = view()->shared('restaurant');
         $websiteSetting = $restaurant->websiteSetting;
 
         if (!$websiteSetting || !$websiteSetting->isLive()) {
@@ -60,8 +62,9 @@ class PublicWebsiteController extends Controller
     /**
      * Show the contact page
      */
-    public function contact(Restaurant $restaurant)
+    public function contact()
     {
+        $restaurant = view()->shared('restaurant');
         $websiteSetting = $restaurant->websiteSetting;
 
         if (!$websiteSetting || !$websiteSetting->isLive()) {
@@ -74,8 +77,9 @@ class PublicWebsiteController extends Controller
     /**
      * Show the about page
      */
-    public function about(Restaurant $restaurant)
+    public function about()
     {
+        $restaurant = view()->shared('restaurant');
         $websiteSetting = $restaurant->websiteSetting;
 
         if (!$websiteSetting || !$websiteSetting->isLive()) {
@@ -88,8 +92,10 @@ class PublicWebsiteController extends Controller
     /**
      * Handle contact form submission
      */
-    public function submitContact(Restaurant $restaurant)
+    public function submitContact()
     {
+        $restaurant = view()->shared('restaurant');
+        
         $validated = request()->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
