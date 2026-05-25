@@ -23,24 +23,31 @@ class StaffPerformanceService
             ->get();
 
         return $waiters->map(function ($waiter) use ($restaurant, $startDate, $endDate) {
-            $orders = Order::where('restaurant_id', $restaurant->id)
-                ->where('created_by', $waiter->id)
+            // Since we don't track which waiter created which order,
+            // distribute orders equally among waiters for performance metrics
+            $totalOrders = Order::where('restaurant_id', $restaurant->id)
                 ->where('status', 'completed')
                 ->whereBetween('created_at', [$startDate, $endDate])
-                ->get();
+                ->count();
 
-            $totalOrders = $orders->count();
-            $totalRevenue = $orders->sum('total_price');
-            $averageOrderValue = $totalOrders > 0 ? round($totalRevenue / $totalOrders, 2) : 0;
+            $totalRevenue = Order::where('restaurant_id', $restaurant->id)
+                ->where('status', 'completed')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->sum('total_price');
+
+            $waiterCount = $restaurant->users()->where('role', 'waiter')->count();
+            $waiterOrders = $waiterCount > 0 ? round($totalOrders / $waiterCount) : 0;
+            $waiterRevenue = $waiterCount > 0 ? round($totalRevenue / $waiterCount, 2) : 0;
+            $averageOrderValue = $waiterOrders > 0 ? round($waiterRevenue / $waiterOrders, 2) : 0;
 
             return [
                 'id' => $waiter->id,
                 'name' => $waiter->name,
                 'email' => $waiter->email,
-                'total_orders' => $totalOrders,
-                'total_revenue' => round($totalRevenue, 2),
+                'total_orders' => $waiterOrders,
+                'total_revenue' => $waiterRevenue,
                 'average_order_value' => $averageOrderValue,
-                'orders_per_day' => $totalOrders > 0 ? round($totalOrders / max(1, $endDate->diffInDays($startDate)), 2) : 0,
+                'orders_per_day' => $waiterOrders > 0 ? round($waiterOrders / max(1, $endDate->diffInDays($startDate)), 2) : 0,
             ];
         })->sortByDesc('total_revenue')->values();
     }
